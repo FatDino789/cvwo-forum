@@ -26,11 +26,26 @@ const Title = () => {
   );
 };
 
+const Description = () => {
+  return (
+    <div className="w-50 mx-auto">
+      <h2 className="fs-5">
+        Welcome to the Exchange Forum! A place where you can find out more about
+        different exchange destinations and also connect with people heading to
+        the same regions.
+      </h2>
+    </div>
+  );
+};
+
 const TopBar = () => {
   return (
     <div className="mt-3">
-      <div className="d-flex align-items-center justify-content-center">
-        <Title />
+      <div className="d-flex">
+        <div className="align-items items-center justify-content-center text-center w-100">
+          <Title />
+          <Description />
+        </div>
         <div className="position-absolute end-0 me-5">
           <div className="d-flex gap-2">
             <LoginButton />
