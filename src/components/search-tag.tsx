@@ -1,3 +1,5 @@
+import { FiX } from "react-icons/fi";
+
 const tagStyle = {
   padding: "8px 8px 8px 16px",
   background: "linear-gradient(180deg, #f5f5f5, #e2e2e2)",
@@ -13,8 +15,29 @@ const tagStyle = {
 export type TagProps = {
   id: number;
   text: string;
+  isSearched: boolean;
+  onRemove?: (tagId: number) => void;
 };
 
-export const SearchTag = ({ id, text }: TagProps) => {
-  return <div style={tagStyle}>{text}</div>;
+export const SearchTag = ({ id, text, isSearched, onRemove }: TagProps) => {
+  return (
+    <div style={tagStyle} key={id}>
+      {text}
+      {isSearched && (
+        <FiX
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove?.(id);
+          }}
+          className="ms-2 text-danger"
+          style={{
+            cursor: "pointer",
+            paddingRight: "8px",
+            fontSize: "16px",
+          }}
+          size={25}
+        />
+      )}
+    </div>
+  );
 };
