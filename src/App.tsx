@@ -1,11 +1,11 @@
 import TopBar from "./sections/top-bar";
-import SearchBar from "./components/search-bar";
+import FilterSection from "./sections/filter-section";
 
 function App() {
   return (
     <div className="container">
       <TopBar />
-      <SearchBar />
+      <FilterSection />
     </div>
   );
 }
