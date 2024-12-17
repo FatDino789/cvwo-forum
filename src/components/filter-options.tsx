@@ -27,6 +27,7 @@ const MostViewed = ({ selected, setSelected }: FilterProps) => {
         style={{
           fontSize: "12px",
           color: selected === 0 ? "#DC3545" : "#000000",
+          paddingTop: "2px",
         }}
       >
         Views
@@ -52,6 +53,7 @@ const MostLiked = ({ selected, setSelected }: FilterProps) => {
         style={{
           fontSize: "12px",
           color: selected === 1 ? "#DC3545" : "#000000",
+          paddingTop: "1px",
         }}
       >
         Likes
@@ -72,11 +74,16 @@ const MostCommented = ({ selected, setSelected }: FilterProps) => {
         }
       }}
     >
-      <FaCommentDots size={15} color={selected === 2 ? "#DC3545" : "#000000"} />
+      <FaCommentDots
+        size={15}
+        color={selected === 2 ? "#DC3545" : "#000000"}
+        style={{ marginTop: "2px" }}
+      />
       <text
         style={{
           fontSize: "12px",
           color: selected === 2 ? "#DC3545" : "#000000",
+          paddingTop: "1px",
         }}
       >
         Comments
@@ -105,12 +112,12 @@ const OrderButton = ({ selectedOrder, setSelectedOrder }: OrderProps) => {
       {selectedOrder === 0 ? (
         <>
           <text style={{ fontSize: "12px" }}>Recent</text>
-          <HiSortAscending size={15} />
+          <HiSortAscending size={15} style={{ marginTop: "3px" }} />
         </>
       ) : (
         <>
           <text style={{ fontSize: "12px" }}>Oldest</text>
-          <HiSortDescending size={15} />
+          <HiSortDescending size={15} style={{ marginTop: "3px" }} />
         </>
       )}
     </div>
@@ -126,7 +133,9 @@ const FilterStrip = () => {
       <div className="row justify-content-center">
         <div className="col-6">
           <div className="d-flex align-items-center w-100 gap-4">
-            <text style={{ fontSize: "12px" }}>Filter By:</text>
+            <text style={{ fontSize: "12px", paddingTop: "1px" }}>
+              Filter By:
+            </text>
             <div className="d-flex gap-3 me-auto">
               <MostViewed selected={selected} setSelected={setSelected} />
               <MostLiked selected={selected} setSelected={setSelected} />
