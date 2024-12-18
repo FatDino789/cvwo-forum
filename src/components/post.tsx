@@ -32,6 +32,7 @@ const Post = () => {
             <div className="d-flex align-items-start gap-2">
               <div
                 style={{
+                  flexShrink: 0,
                   width: "40px",
                   height: "40px",
                   backgroundColor: "#DC3545",
@@ -54,10 +55,13 @@ const Post = () => {
                     textOverflow: "ellipsis",
                     display: "-webkit-box",
                     WebkitLineClamp: "2",
+                    WebkitBoxOrient: "vertical",
                   }}
                 >
                   Sample Text hi guys this is a sample text pls ignore whatever
-                  i am saying i am just trying to type something long
+                  i am saying i am just trying to type something long Sample
+                  Text hi guys this is a sample text pls ignore whatever i am
+                  saying i am just trying to type something long
                 </p>
 
                 <div
@@ -78,9 +82,24 @@ const Post = () => {
                       ))}
                   </div>
                   <div className="d-flex gap-2">
-                    <FaEye color="#6c757d" />
-                    <FaThumbsUp color="#6c757d" />
-                    <FaCommentDots color="#6c757d" />
+                    <div className="d-flex gap-1">
+                      <text className="text-muted" style={{ fontSize: "12px" }}>
+                        10
+                      </text>
+                      <FaEye color="#6c757d" />
+                    </div>
+                    <div className="d-flex gap-1">
+                      <text className="text-muted" style={{ fontSize: "12px" }}>
+                        5
+                      </text>
+                      <FaThumbsUp color="#6c757d" />
+                    </div>
+                    <div className="d-flex gap-1">
+                      <text className="text-muted" style={{ fontSize: "12px" }}>
+                        2
+                      </text>
+                      <FaCommentDots color="#6c757d" />
+                    </div>
                   </div>
                 </div>
               </div>
