@@ -29,7 +29,7 @@ const SearchBar = () => {
     <div className="container">
       <div className="row justify-content-center">
         <div className="col-6">
-          <div className="position-relative">
+          <div className="position-relative" style={{ height: "50px" }}>
             <div className="form-control d-flex align-items-center gap-2 flex-wrap">
               {selectedTags.map((tag) => (
                 <span key={tag.id} style={{ display: "inline-block" }}>
