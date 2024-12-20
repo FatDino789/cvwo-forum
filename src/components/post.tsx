@@ -3,7 +3,11 @@ import { FaThumbsUp } from "react-icons/fa";
 import { FaCommentDots } from "react-icons/fa6";
 import { TagProps, SearchTag } from "./search-tag";
 
-const Post = () => {
+type PostPros = {
+  onClick: () => void;
+};
+
+const Post = ({ onClick }: PostPros) => {
   const SampleSearchTags: TagProps[] = [
     { id: 1, text: "Europe", isSearched: false },
     { id: 2, text: "Summer Exchange", isSearched: false },
@@ -28,6 +32,7 @@ const Post = () => {
             onMouseLeave={(e) =>
               (e.currentTarget.style.backgroundColor = "white")
             }
+            onClick={onClick}
           >
             <div className="d-flex align-items-start gap-2">
               <div
