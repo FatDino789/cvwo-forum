@@ -1,6 +1,8 @@
 import Post from "../components/post";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Discussion from "../components/discussion";
+
+import { getPosts } from "../infrastructure/api";
 
 const ForumSection = () => {
   const sampleArray = [1, 2, 3, 4, 5, 6];
@@ -13,6 +15,23 @@ const ForumSection = () => {
   const closeModal = () => {
     setModalOpen(false);
   };
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      console.log("Fetching posts...");
+      const result = await getPosts();
+      console.log(result);
+
+      if ("message" in result) {
+        console.error("Error:", result.message);
+        return;
+      }
+
+      console.log("Posts received:", result);
+    };
+
+    loadPosts();
+  }, []);
 
   return (
     <div className="container" style={{ marginTop: "2%" }}>
