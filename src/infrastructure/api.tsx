@@ -1,4 +1,4 @@
-import { PostData, ApiError } from "../database/types";
+import { PostData, ApiError } from "../database/database-types";
 
 const API_BASE_URL = "http://localhost:8080/api";
 

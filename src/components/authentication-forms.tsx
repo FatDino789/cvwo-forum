@@ -1,3 +1,8 @@
+import { useState, FormEvent } from "react";
+import { useOutletContext } from "react-router-dom";
+
+import { ContextType } from "../database/authentication-types";
+
 type AuthModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -5,6 +10,21 @@ type AuthModalProps = {
 };
 
 const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  const { setJwtToken } = useOutletContext<ContextType>();
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log("email/pass", email, password);
+
+    if (email === "admin@example.com") {
+      setJwtToken("abc");
+    }
+  };
+
   return (
     <div
       className={`modal fade ${isOpen ? "show" : ""}`}
@@ -42,7 +62,10 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
             ></button>
           </div>
           <div className="modal-body d-flex flex-column h-100">
-            <form className="px-4 h-100 d-flex flex-column">
+            <form
+              className="px-4 h-100 d-flex flex-column"
+              onSubmit={handleSubmit}
+            >
               <div className="mb-3">
                 <label htmlFor="email" className="form-label text-muted">
                   Email address
@@ -52,6 +75,10 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
                   className="form-control"
                   id="email"
                   placeholder="name@example.com"
+                  value={email}
+                  onChange={(event) => {
+                    setEmail(event.target.value);
+                  }}
                 />
               </div>
               <div className="mb-3">
@@ -63,6 +90,10 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
                   className="form-control"
                   id="password"
                   placeholder="Enter your password"
+                  value={password}
+                  onChange={(event) => {
+                    setPassword(event.target.value);
+                  }}
                 />
               </div>
               {title === "Register" && (
@@ -75,6 +106,10 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
                     className="form-control"
                     id="password"
                     placeholder="Enter your password"
+                    value={confirmPassword}
+                    onChange={(event) => {
+                      setConfirmPassword(event.target.value);
+                    }}
                   />
                 </div>
               )}
