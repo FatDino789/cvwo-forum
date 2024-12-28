@@ -1,7 +1,6 @@
 import { useState, FormEvent } from "react";
-import { useOutletContext } from "react-router-dom";
 
-import { ContextType } from "../database/authentication-types";
+import { useAuth } from "../infrastructure/authentication-context";
 
 type AuthModalProps = {
   isOpen: boolean;
@@ -14,14 +13,75 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
-  const { setJwtToken } = useOutletContext<ContextType>();
+  const [error, setError] = useState<string>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const { setJwtToken } = useAuth();
+
+  const validateForm = (): boolean => {
+    if (!email || !password) {
+      setError("Please fill in all fields");
+      return false;
+    }
+
+    if (!email.includes("@")) {
+      setError("Please enter a valid email");
+      return false;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return false;
+    }
+
+    if (title === "Register" && password !== confirmPassword) {
+      setError("Passwords do not match");
+      return false;
+    }
+
+    return true;
+  };
+
+  const clearForm = () => {
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("email/pass", email, password);
+    setError("");
 
-    if (email === "admin@example.com") {
-      setJwtToken("abc");
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:8080/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Authentication failed");
+      }
+
+      const data = await response.json();
+      setJwtToken(data.token);
+      onClose();
+      clearForm();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Authentication failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -62,6 +122,13 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
             ></button>
           </div>
           <div className="modal-body d-flex flex-column h-100">
+            {error && (
+              <div className="alert alert-danger" role="alert">
+                {error}
+              </div>
+            )}
+          </div>
+          <div className="modal-body d-flex flex-column h-100">
             <form
               className="px-4 h-100 d-flex flex-column"
               onSubmit={handleSubmit}
@@ -79,6 +146,7 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
                   onChange={(event) => {
                     setEmail(event.target.value);
                   }}
+                  disabled={isLoading}
                 />
               </div>
               <div className="mb-3">
@@ -94,6 +162,7 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
                   onChange={(event) => {
                     setPassword(event.target.value);
                   }}
+                  disabled={isLoading}
                 />
               </div>
               {title === "Register" && (
@@ -110,6 +179,7 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
                     onChange={(event) => {
                       setConfirmPassword(event.target.value);
                     }}
+                    disabled={isLoading}
                   />
                 </div>
               )}
