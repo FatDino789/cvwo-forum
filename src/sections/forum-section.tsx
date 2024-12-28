@@ -1,6 +1,6 @@
-import Post from "../components/post";
+import Post from "../components/forum/post";
 import { useEffect, useState } from "react";
-import Discussion from "../components/discussion";
+import Discussion from "../components/forum/discussion";
 
 import { getPosts } from "../infrastructure/api";
 

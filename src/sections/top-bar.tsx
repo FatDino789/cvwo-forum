@@ -1,4 +1,4 @@
-import AuthenticationButton from "../components/authentication-buttons";
+import AuthenticationButton from "../components/authentication/authentication-buttons";
 import { PiLockKeyOpen } from "react-icons/pi";
 import { PiPencilSimpleDuotone } from "react-icons/pi";
 

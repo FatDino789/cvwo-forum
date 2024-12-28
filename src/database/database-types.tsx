@@ -1,12 +1,12 @@
-export interface PostData {
+export type PostData = {
   id: number;
   user_id: number;
   title: string;
   content: string;
   created_at: string;
-}
+};
 
-export interface ApiError {
+export type ApiError = {
   message: string;
   status?: number;
-}
+};

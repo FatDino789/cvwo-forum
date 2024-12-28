@@ -1,5 +1,5 @@
-import FilterStrip from "../components/filter-options";
-import SearchBar from "../components/search-bar";
+import FilterStrip from "../components/filter/filter-options";
+import SearchBar from "../components/filter/search-bar";
 
 const FilterSection = () => {
   return (

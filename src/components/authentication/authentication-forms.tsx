@@ -1,6 +1,7 @@
 import { useState, FormEvent } from "react";
 
-import { useAuth } from "../infrastructure/authentication-context";
+import { loginUser } from "../../infrastructure/api";
+import { useAuth } from "../../infrastructure/authentication-context";
 
 type AuthModalProps = {
   isOpen: boolean;
@@ -59,23 +60,14 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8080/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      });
+      const result = await loginUser({ email, password });
 
-      if (!response.ok) {
-        throw new Error("Authentication failed");
+      // check for an API error
+      if ("message" in result) {
+        throw new Error(result.message);
       }
 
-      const data = await response.json();
-      setJwtToken(data.token);
+      setJwtToken(result.token);
       onClose();
       clearForm();
     } catch (err) {

@@ -1,7 +1,7 @@
 import { FaEye } from "react-icons/fa";
 import { FaThumbsUp } from "react-icons/fa";
 import { FaCommentDots } from "react-icons/fa6";
-import { TagProps, SearchTag } from "./search-tag";
+import { TagProps, SearchTag } from "../filter/search-tag";
 
 type PostPros = {
   onClick: () => void;
