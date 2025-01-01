@@ -28,7 +28,10 @@ const SearchBar = () => {
   return (
     <div className="container">
       <div className="row justify-content-center">
-        <div className="col-6">
+        <div
+          className="col-10 mx-auto"
+          style={{ minWidth: "600px", maxWidth: "80%" }}
+        >
           <div className="position-relative" style={{ height: "50px" }}>
             <div className="form-control d-flex align-items-center gap-2 flex-wrap">
               {selectedTags.map((tag) => (

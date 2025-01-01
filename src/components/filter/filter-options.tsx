@@ -131,20 +131,29 @@ const FilterStrip = () => {
   return (
     <div className="container" style={{ marginTop: "10px" }}>
       <div className="row justify-content-center">
-        <div className="col-6">
-          <div className="d-flex align-items-center w-100 gap-4">
-            <text style={{ fontSize: "12px", paddingTop: "1px" }}>
-              Filter By:
-            </text>
-            <div className="d-flex gap-3 me-auto">
-              <MostViewed selected={selected} setSelected={setSelected} />
-              <MostLiked selected={selected} setSelected={setSelected} />
-              <MostCommented selected={selected} setSelected={setSelected} />
+        <div
+          className="col-10 mx-auto"
+          style={{ minWidth: "600px", maxWidth: "80%" }}
+        >
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex align-items-center gap-4">
+              <text style={{ fontSize: "12px", paddingTop: "1px" }}>
+                Filter By:
+              </text>
+              <div className="d-flex gap-3">
+                <MostViewed selected={selected} setSelected={setSelected} />
+                <MostLiked selected={selected} setSelected={setSelected} />
+                <MostCommented selected={selected} setSelected={setSelected} />
+              </div>
             </div>
-            <OrderButton
-              selectedOrder={selectedOrder}
-              setSelectedOrder={setSelectedOrder}
-            />
+
+            {/* Right side with order button */}
+            <div>
+              <OrderButton
+                selectedOrder={selectedOrder}
+                setSelectedOrder={setSelectedOrder}
+              />
+            </div>
           </div>
         </div>
       </div>

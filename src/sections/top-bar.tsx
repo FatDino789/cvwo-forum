@@ -42,7 +42,7 @@ const TopBar = () => {
   return (
     <div className="mt-3">
       <div className="d-flex">
-        <div className="align-items items-center justify-content-center text-center w-100">
+        <div className="align-items-center justify-content-center text-center w-100">
           <Title />
           {/* <Description /> */}
         </div>
