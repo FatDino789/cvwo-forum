@@ -47,6 +47,7 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
     setEmail("");
     setPassword("");
     setConfirmPassword("");
+    setError("");
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -102,7 +103,7 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div
-          className="modal-content"
+          className="modal-content text-start"
           style={{ borderRadius: "16px 16px 16px 16px", height: "65%" }}
         >
           <div className="modal-header border-0 justify-content-center">
@@ -110,16 +111,18 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
             <button
               type="button"
               className="btn-close position-absolute end-0 me-3"
-              onClick={onClose}
+              onClick={() => {
+                onClose();
+                clearForm();
+              }}
             ></button>
           </div>
-          <div className="modal-body d-flex flex-column h-100">
-            {error && (
-              <div className="alert alert-danger" role="alert">
-                {error}
-              </div>
-            )}
-          </div>
+          {error && (
+            <div className="alert alert-danger" role="alert">
+              {error}
+            </div>
+          )}
+
           <div className="modal-body d-flex flex-column h-100">
             <form
               className="px-4 h-100 d-flex flex-column"

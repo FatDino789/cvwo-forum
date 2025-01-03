@@ -19,16 +19,12 @@ const ForumSection = () => {
 
   useEffect(() => {
     const loadPosts = async () => {
-      console.log("Fetching posts...");
       const result = await getPosts();
-      console.log(result);
 
       if ("message" in result) {
         console.error("Error:", result.message);
         return;
       }
-
-      console.log("Posts received:", result);
     };
 
     loadPosts();

@@ -9,8 +9,20 @@ type PostPros = {
 
 const Post = ({ onClick }: PostPros) => {
   const SampleSearchTags: TagProps[] = [
-    { id: 1, text: "Europe", isSearched: false },
-    { id: 2, text: "Summer Exchange", isSearched: false },
+    {
+      id: 1,
+      text: "Europe",
+      isSearched: false,
+      popular: false,
+      color: "#DCF2E7",
+    },
+    {
+      id: 2,
+      text: "Summer Exchange",
+      isSearched: false,
+      popular: false,
+      color: "#FFEDD5",
+    },
   ];
 
   return (
@@ -84,6 +96,8 @@ const Post = ({ onClick }: PostPros) => {
                           text={tag.text}
                           isSearched={false}
                           size="small"
+                          popular={false}
+                          color={tag.color}
                         />
                       </div>
                     ))}

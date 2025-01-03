@@ -2,7 +2,9 @@ import { FiX } from "react-icons/fi";
 
 const tagStyle = (
   isSearched: boolean,
-  size: "small" | "normal" = "normal"
+  size: "small" | "normal" = "normal",
+  popular: boolean,
+  color: string
 ) => ({
   padding:
     size === "small"
@@ -10,7 +12,7 @@ const tagStyle = (
       : isSearched
       ? "5px 5px 5px 16px"
       : "8px 8px 8px 16px",
-  background: "linear-gradient(180deg, #f5f5f5, #e2e2e2)",
+  background: color,
   clipPath: "polygon(10px 0%, 100% 0%, 100% 100%, 10px 100%, 0% 50%)",
   display: "inline-block",
   marginRight: "5px",
@@ -18,6 +20,7 @@ const tagStyle = (
   fontWeight: 500,
   fontSize: isSearched ? "0.8rem" : size === "small" ? "0.7rem" : "0.9rem",
   transition: "all 0.2s ease-in-out",
+  width: "fit-content",
 });
 
 export type TagProps = {
@@ -26,6 +29,9 @@ export type TagProps = {
   isSearched: boolean;
   onRemove?: (tagId: number) => void;
   size?: "small" | "normal";
+  popular: boolean;
+  searches?: string;
+  color: string;
 };
 
 export const SearchTag = ({
@@ -34,9 +40,12 @@ export const SearchTag = ({
   isSearched,
   onRemove,
   size = "normal",
+  popular,
+  searches = "",
+  color,
 }: TagProps) => {
   return (
-    <div style={tagStyle(isSearched, size)} key={id}>
+    <div style={tagStyle(isSearched, size, popular, color)} key={id}>
       {text}
       {isSearched && (
         <FiX
@@ -51,6 +60,11 @@ export const SearchTag = ({
           }}
           size={20}
         />
+      )}
+      {popular && (
+        <span className="bg-white px-2 ms-2 rounded-pill py-1 bg-opacity-50">
+          {searches}
+        </span>
       )}
     </div>
   );

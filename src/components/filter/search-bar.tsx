@@ -7,8 +7,20 @@ const SearchBar = () => {
   const [selectedTags, setSelectedTags] = useState<TagProps[]>([]);
 
   const searchTags: TagProps[] = [
-    { id: 1, text: "Europe", isSearched: false },
-    { id: 2, text: "Summer Exchange", isSearched: false },
+    {
+      id: 1,
+      text: "Europe",
+      isSearched: false,
+      popular: false,
+      color: "#DCF2E7",
+    },
+    {
+      id: 2,
+      text: "Summer Exchange",
+      isSearched: false,
+      popular: false,
+      color: "#FFEDD5",
+    },
   ];
 
   const filteredTags = searchTags.filter((option) =>
@@ -41,6 +53,8 @@ const SearchBar = () => {
                     text={tag.text}
                     isSearched={true}
                     onRemove={removeTag}
+                    popular={tag.popular}
+                    color={tag.color}
                   />
                 </span>
               ))}
@@ -74,6 +88,8 @@ const SearchBar = () => {
                         id={tag.id}
                         text={tag.text}
                         isSearched={false}
+                        popular={tag.popular}
+                        color={tag.color}
                       />
                     </div>
                   ))
