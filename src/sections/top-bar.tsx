@@ -40,13 +40,13 @@ const Title = () => {
 
 const TopBar = () => {
   return (
-    <div className="mt-3">
+    <div className="mt-5">
       <div className="d-flex">
         <div className="align-items-center justify-content-center text-center w-100">
           <Title />
           {/* <Description /> */}
         </div>
-        <div className="position-absolute end-0 me-5">
+        <div className="position-absolute end-0 me-5 top-0 mt-4">
           <div className="d-flex gap-2">
             <LoginButton />
             <RegisterButton />

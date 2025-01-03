@@ -1,7 +1,6 @@
-import React from "react";
 import { Tag } from "lucide-react";
 
-const PopularTags: React.FC = () => {
+const PopularTags = () => {
   const tags = [
     {
       id: 1,
@@ -53,25 +52,15 @@ const PopularTags: React.FC = () => {
         width: "fit-content",
       },
     },
-    {
-      id: 6,
-      name: "Language",
-      count: "98",
-      style: {
-        backgroundColor: "rgba(237, 233, 254, 0.8)",
-        borderRadius: "25px",
-        width: "fit-content",
-      },
-    },
   ];
 
   return (
-    <div className="p-4 bg-white">
-      <div className="flex flex-row flex-wrap items-center gap-2 mb-4">
+    <div className="p-4 bg-light border border-gray-200 border-2 rounded-5">
+      <div className="d-flex align-items-center gap-2 mb-4">
         <Tag className="w-6 h-6" />
         <h2 className="text-[20px] font-bold">Popular Topics</h2>
       </div>
-      <div className="flex flex-wrap flex-row gap-3">
+      <div className="gap-3" style={{ minWidth: "250px", maxWidth: "80%" }}>
         {tags.map((tag) => (
           <div
             key={tag.id}
