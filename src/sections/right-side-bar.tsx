@@ -1,6 +1,7 @@
+import { FC } from "react";
 import ChatBox from "../components/side-bar/chat-box";
 
-const RightSideBar = () => {
+const RightSideBar: FC = () => {
   return (
     <div>
       <ChatBox />

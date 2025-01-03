@@ -1,6 +1,7 @@
+import { FC } from "react";
 import { FiPlus } from "react-icons/fi";
 
-const CreatePostButton = () => {
+const CreatePostButton: FC = () => {
   return (
     <button
       className="btn px-3 py-2 fw-semibold rounded shadow d-inline-flex align-items-center justify-content-center"

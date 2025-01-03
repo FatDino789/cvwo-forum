@@ -1,7 +1,9 @@
+import { FC } from "react";
+
 import { useState } from "react";
 import { TagProps, SearchTag } from "./search-tag";
 
-const SearchBar = () => {
+const SearchBar: FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [selectedTags, setSelectedTags] = useState<TagProps[]>([]);
@@ -27,13 +29,13 @@ const SearchBar = () => {
     option.text.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleTagClick = (tag: TagProps) => {
+  const handleTagClick = (tag: TagProps): void => {
     setSelectedTags([...selectedTags, tag]);
     setSearchTerm("");
     setShowDropdown(false);
   };
 
-  const removeTag = (tagId: number) => {
+  const removeTag = (tagId: number): void => {
     setSelectedTags(selectedTags.filter((tag) => tag.id !== tagId));
   };
 

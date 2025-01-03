@@ -11,7 +11,6 @@ type LoginResponse = {
   token: string;
 };
 
-// API connection to get posts
 export const getPosts = async (): Promise<PostData[] | ApiError> => {
   try {
     const response = await fetch(`${API_BASE_URL}/posts`);
@@ -34,7 +33,6 @@ export const getPosts = async (): Promise<PostData[] | ApiError> => {
   }
 };
 
-// API connection to log in users
 export const loginUser = async (
   credentials: LoginCredentials
 ): Promise<LoginResponse | ApiError> => {
@@ -64,3 +62,5 @@ export const loginUser = async (
     };
   }
 };
+
+export type { LoginCredentials, LoginResponse };

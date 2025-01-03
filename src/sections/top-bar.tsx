@@ -1,12 +1,11 @@
+import { FC } from "react";
 import AuthenticationButton from "../components/authentication/authentication-buttons";
 import CreatePostButton from "../components/forum/create-post-button";
-import { PiLockKeyOpen } from "react-icons/pi";
-import { PiPencilSimpleDuotone } from "react-icons/pi";
+import { PiLockKeyOpen, PiPencilSimpleDuotone } from "react-icons/pi";
 import { SlLogout } from "react-icons/sl";
-
 import { useAuth } from "../infrastructure/authentication-context";
 
-const LoginButton = () => {
+const LoginButton: FC = () => {
   return (
     <div>
       <AuthenticationButton text="Log in" icon={PiLockKeyOpen} />
@@ -14,7 +13,7 @@ const LoginButton = () => {
   );
 };
 
-const RegisterButton = () => {
+const RegisterButton: FC = () => {
   return (
     <div>
       <AuthenticationButton text="Register" icon={PiPencilSimpleDuotone} />
@@ -22,7 +21,7 @@ const RegisterButton = () => {
   );
 };
 
-const LogoutButton = () => {
+const LogoutButton: FC = () => {
   return (
     <div>
       <AuthenticationButton
@@ -35,7 +34,7 @@ const LogoutButton = () => {
   );
 };
 
-const Title = () => {
+const Title: FC = () => {
   return (
     <div>
       <h1>Exchange Forum</h1>
@@ -43,26 +42,14 @@ const Title = () => {
   );
 };
 
-// const Description = () => {
-//   return (
-//     <div className="w-50 mx-auto">
-//       <h2 className="fs-5">
-//         Welcome to the Exchange Forum! A place where you can find out more about
-//         different exchange destinations and also connect with people heading to
-//         the same regions.
-//       </h2>
-//     </div>
-//   );
-// };
-
-const TopBar = () => {
+const TopBar: FC = () => {
   const { jwtToken } = useAuth();
+
   return (
     <div className="mt-5">
       <div className="d-flex">
         <div className="align-items-center justify-content-center text-center w-100">
           <Title />
-          {/* <Description /> */}
         </div>
         <div className="position-absolute end-0 me-5 top-0 mt-4">
           <div className="d-flex gap-2">

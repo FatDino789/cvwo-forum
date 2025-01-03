@@ -1,9 +1,6 @@
-import { useState } from "react";
-
+import { FC, useState } from "react";
 import { IconType } from "react-icons";
-
 import { useAuth } from "../../infrastructure/authentication-context";
-
 import AuthenticationForm from "./authentication-forms";
 
 type ButtonProps = {
@@ -16,7 +13,16 @@ type ButtonProps = {
   hoverColor?: string;
 };
 
-const AuthenticationButton = ({
+type ButtonStyle = {
+  width: string;
+  backgroundColor: string;
+  color: string;
+  "&:hover"?: {
+    backgroundColor?: string;
+  };
+};
+
+const AuthenticationButton: FC<ButtonProps> = ({
   text,
   type = "button",
   className = "",
@@ -24,25 +30,26 @@ const AuthenticationButton = ({
   backgroundColor = "#0d6efd",
   textColor = "white",
   hoverColor,
-}: ButtonProps) => {
+}) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
   const { setJwtToken } = useAuth();
 
-  const buttonStyle = {
+  const buttonStyle: ButtonStyle = {
     width: "125px",
-    backgroundColor: `${backgroundColor}`,
+    backgroundColor: backgroundColor,
     color: textColor,
-    "&:hover": {
-      backgroundColor: hoverColor,
-    },
+    "&:hover": hoverColor
+      ? {
+          backgroundColor: hoverColor,
+        }
+      : undefined,
   };
 
-  const openForm = () => {
+  const openForm = (): void => {
     setIsModalOpen(true);
   };
 
-  const Logout = () => {
+  const Logout = (): void => {
     setJwtToken("");
   };
 
@@ -50,7 +57,7 @@ const AuthenticationButton = ({
     <>
       <AuthenticationForm
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={(): void => setIsModalOpen(false)}
         title={text}
       />
       <button

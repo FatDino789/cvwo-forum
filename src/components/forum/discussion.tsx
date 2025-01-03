@@ -1,9 +1,11 @@
+import { FC } from "react";
+
 type DiscussionProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-const Discussion = ({ isOpen, onClose }: DiscussionProps) => {
+const Discussion: FC<DiscussionProps> = ({ isOpen, onClose }) => {
   return (
     <div
       className={`modal fade ${isOpen ? "show" : ""}`}

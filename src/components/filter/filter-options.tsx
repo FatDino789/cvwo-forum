@@ -1,3 +1,5 @@
+import { FC } from "react";
+
 import { FaEye } from "react-icons/fa";
 import { FaThumbsUp } from "react-icons/fa";
 import { FaCommentDots } from "react-icons/fa6";
@@ -10,7 +12,7 @@ type FilterProps = {
   setSelected: (id: number) => void;
 };
 
-const MostViewed = ({ selected, setSelected }: FilterProps) => {
+const MostViewed: FC<FilterProps> = ({ selected, setSelected }) => {
   return (
     <div
       className="d-flex gap-1"
@@ -36,7 +38,7 @@ const MostViewed = ({ selected, setSelected }: FilterProps) => {
   );
 };
 
-const MostLiked = ({ selected, setSelected }: FilterProps) => {
+const MostLiked: FC<FilterProps> = ({ selected, setSelected }) => {
   return (
     <div
       className="d-flex gap-1"
@@ -62,7 +64,7 @@ const MostLiked = ({ selected, setSelected }: FilterProps) => {
   );
 };
 
-const MostCommented = ({ selected, setSelected }: FilterProps) => {
+const MostCommented: FC<FilterProps> = ({ selected, setSelected }) => {
   return (
     <div
       className="d-flex gap-1"
@@ -97,7 +99,7 @@ type OrderProps = {
   setSelectedOrder: (index: number) => void;
 };
 
-const OrderButton = ({ selectedOrder, setSelectedOrder }: OrderProps) => {
+const OrderButton: FC<OrderProps> = ({ selectedOrder, setSelectedOrder }) => {
   return (
     <div
       className="d-flex gap-1"
@@ -124,7 +126,7 @@ const OrderButton = ({ selectedOrder, setSelectedOrder }: OrderProps) => {
   );
 };
 
-const FilterStrip = () => {
+const FilterStrip: FC = () => {
   const [selected, setSelected] = useState<number>(-1);
   const [selectedOrder, setSelectedOrder] = useState<number>(0);
 

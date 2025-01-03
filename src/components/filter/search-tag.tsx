@@ -1,9 +1,9 @@
+import { FC } from "react";
 import { FiX } from "react-icons/fi";
 
 const tagStyle = (
   isSearched: boolean,
   size: "small" | "normal" = "normal",
-  popular: boolean,
   color: string
 ) => ({
   padding:
@@ -34,7 +34,7 @@ export type TagProps = {
   color: string;
 };
 
-export const SearchTag = ({
+export const SearchTag: FC<TagProps> = ({
   id,
   text,
   isSearched,
@@ -43,9 +43,9 @@ export const SearchTag = ({
   popular,
   searches = "",
   color,
-}: TagProps) => {
+}) => {
   return (
-    <div style={tagStyle(isSearched, size, popular, color)} key={id}>
+    <div style={tagStyle(isSearched, size, color)} key={id}>
       {text}
       {isSearched && (
         <FiX

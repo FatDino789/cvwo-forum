@@ -1,6 +1,7 @@
+import { FC } from "react";
 import { MessageCircle } from "lucide-react";
 
-const ChatBox = () => {
+const ChatBox: FC = () => {
   return (
     <div className="p-4 bg-light border border-gray-200 border-2 rounded-5">
       <div className="d-flex justify-content-center align-items-center gap-2 mb-4">

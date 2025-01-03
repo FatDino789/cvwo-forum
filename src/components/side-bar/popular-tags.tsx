@@ -1,8 +1,19 @@
+import { FC } from "react";
 import { Tag } from "lucide-react";
 import { SearchTag } from "../filter/search-tag";
 
-const PopularTags = () => {
-  const tags = [
+type TagType = {
+  id: number;
+  name: string;
+  count: string;
+  style: {
+    backgroundColor: string;
+    borderRadius: string;
+  };
+};
+
+const PopularTags: FC = () => {
+  const tags: TagType[] = [
     {
       id: 1,
       name: "Accommodation",
@@ -62,6 +73,7 @@ const PopularTags = () => {
       >
         {tags.map((tag) => (
           <SearchTag
+            key={tag.id}
             id={tag.id}
             text={tag.name}
             isSearched={false}

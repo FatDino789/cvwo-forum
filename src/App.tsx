@@ -1,3 +1,4 @@
+import { FC } from "react";
 import TopBar from "./sections/top-bar";
 import FilterSection from "./sections/filter-section";
 import ForumSection from "./sections/forum-section";
@@ -8,18 +9,16 @@ import RightSideBar from "./sections/right-side-bar";
 
 import { useAuth } from "./infrastructure/authentication-context";
 
-function App() {
+const App: FC = () => {
   return (
     <AuthProvider>
       <AppContent />
     </AuthProvider>
   );
-}
+};
 
-function AppContent() {
+const AppContent: FC = () => {
   const { jwtToken } = useAuth();
-
-  console.log(jwtToken);
 
   return (
     <div className="container-fluid">
@@ -44,6 +43,6 @@ function AppContent() {
       </div>
     </div>
   );
-}
+};
 
 export default App;

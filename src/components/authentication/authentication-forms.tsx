@@ -1,5 +1,4 @@
-import { useState, FormEvent } from "react";
-
+import { FC, useState, FormEvent, ChangeEvent } from "react";
 import { loginUser } from "../../infrastructure/api";
 import { useAuth } from "../../infrastructure/authentication-context";
 
@@ -9,12 +8,11 @@ type AuthModalProps = {
   title: string;
 };
 
-const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
+const AuthenticationForm: FC<AuthModalProps> = ({ isOpen, onClose, title }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { setJwtToken } = useAuth();
@@ -43,14 +41,16 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
     return true;
   };
 
-  const clearForm = () => {
+  const clearForm = (): void => {
     setEmail("");
     setPassword("");
     setConfirmPassword("");
     setError("");
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     event.preventDefault();
     setError("");
 
@@ -63,7 +63,6 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
     try {
       const result = await loginUser({ email, password });
 
-      // check for an API error
       if ("message" in result) {
         throw new Error(result.message);
       }
@@ -76,6 +75,13 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleInputChange = (
+    event: ChangeEvent<HTMLInputElement>,
+    setter: (value: string) => void
+  ): void => {
+    setter(event.target.value);
   };
 
   return (
@@ -100,7 +106,7 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
           transform: isOpen ? "translateY(0)" : "translateY(100%)",
           transition: "transform 0.3s ease-out",
         }}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e): void => e.stopPropagation()}
       >
         <div
           className="modal-content text-start"
@@ -111,18 +117,17 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
             <button
               type="button"
               className="btn-close position-absolute end-0 me-3"
-              onClick={() => {
+              onClick={(): void => {
                 onClose();
                 clearForm();
               }}
-            ></button>
+            />
           </div>
           {error && (
             <div className="alert alert-danger" role="alert">
               {error}
             </div>
           )}
-
           <div className="modal-body d-flex flex-column h-100">
             <form
               className="px-4 h-100 d-flex flex-column"
@@ -138,9 +143,7 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
                   id="email"
                   placeholder="name@example.com"
                   value={email}
-                  onChange={(event) => {
-                    setEmail(event.target.value);
-                  }}
+                  onChange={(e): void => handleInputChange(e, setEmail)}
                   disabled={isLoading}
                 />
               </div>
@@ -154,26 +157,27 @@ const AuthenticationForm = ({ isOpen, onClose, title }: AuthModalProps) => {
                   id="password"
                   placeholder="Enter your password"
                   value={password}
-                  onChange={(event) => {
-                    setPassword(event.target.value);
-                  }}
+                  onChange={(e): void => handleInputChange(e, setPassword)}
                   disabled={isLoading}
                 />
               </div>
               {title === "Register" && (
                 <div className="mb-3">
-                  <label htmlFor="password" className="form-label text-muted">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="form-label text-muted"
+                  >
                     Confirm Password
                   </label>
                   <input
                     type="password"
                     className="form-control"
-                    id="password"
+                    id="confirmPassword"
                     placeholder="Enter your password"
                     value={confirmPassword}
-                    onChange={(event) => {
-                      setConfirmPassword(event.target.value);
-                    }}
+                    onChange={(e): void =>
+                      handleInputChange(e, setConfirmPassword)
+                    }
                     disabled={isLoading}
                   />
                 </div>

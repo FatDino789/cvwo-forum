@@ -1,3 +1,5 @@
+import { FC } from "react";
+
 import { FaEye } from "react-icons/fa";
 import { FaThumbsUp } from "react-icons/fa";
 import { FaCommentDots } from "react-icons/fa6";
@@ -7,7 +9,7 @@ type PostPros = {
   onClick: () => void;
 };
 
-const Post = ({ onClick }: PostPros) => {
+const Post: FC<PostPros> = ({ onClick }) => {
   const SampleSearchTags: TagProps[] = [
     {
       id: 1,

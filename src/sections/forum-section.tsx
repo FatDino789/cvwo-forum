@@ -1,24 +1,23 @@
+import { FC, useEffect, useState } from "react";
 import Post from "../components/forum/post";
-import { useEffect, useState } from "react";
 import Discussion from "../components/forum/discussion";
 import "../App.css";
-
 import { getPosts } from "../infrastructure/api";
 
-const ForumSection = () => {
-  const sampleArray = [1, 2, 3, 4, 5, 6];
+const ForumSection: FC = () => {
+  const sampleArray: number[] = [1, 2, 3, 4, 5, 6];
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
-  const openModal = () => {
+  const openModal = (): void => {
     setModalOpen(true);
   };
 
-  const closeModal = () => {
+  const closeModal = (): void => {
     setModalOpen(false);
   };
 
   useEffect(() => {
-    const loadPosts = async () => {
+    const loadPosts = async (): Promise<void> => {
       const result = await getPosts();
 
       if ("message" in result) {
@@ -48,7 +47,7 @@ const ForumSection = () => {
             }}
           >
             {sampleArray.map((id) => (
-              <div key={id} className="mb-3 w-100 ">
+              <div key={id} className="mb-3 w-100">
                 <Post onClick={openModal} />
               </div>
             ))}

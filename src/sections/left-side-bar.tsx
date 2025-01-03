@@ -1,6 +1,7 @@
+import { FC } from "react";
 import PopularTags from "../components/side-bar/popular-tags";
 
-const LeftSideBar = () => {
+const LeftSideBar: FC = () => {
   return (
     <div>
       <PopularTags />
