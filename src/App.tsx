@@ -3,6 +3,7 @@ import TopBar from "./sections/top-bar";
 import FilterSection from "./sections/filter-section";
 import ForumSection from "./sections/forum-section";
 
+import { TagProvider } from "./infrastructure/tag-context";
 import { AuthProvider } from "./infrastructure/authentication-context";
 import LeftSideBar from "./sections/left-side-bar";
 import RightSideBar from "./sections/right-side-bar";
@@ -12,7 +13,9 @@ import { useAuth } from "./infrastructure/authentication-context";
 const App: FC = () => {
   return (
     <AuthProvider>
-      <AppContent />
+      <TagProvider>
+        <AppContent />
+      </TagProvider>
     </AuthProvider>
   );
 };

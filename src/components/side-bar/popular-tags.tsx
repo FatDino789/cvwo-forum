@@ -1,63 +1,53 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { Tag } from "lucide-react";
 import { SearchTag } from "../filter/search-tag";
 
-type TagType = {
-  id: number;
-  name: string;
-  count: string;
-  style: {
-    backgroundColor: string;
-    borderRadius: string;
-  };
-};
+import { TagProps } from "../filter/search-tag";
+import { TagContext } from "../../infrastructure/tag-context";
 
 const PopularTags: FC = () => {
-  const tags: TagType[] = [
+  const { addSelectedTag } = useContext(TagContext);
+
+  const tags: TagProps[] = [
     {
       id: 1,
-      name: "Accommodation",
-      count: "234",
-      style: {
-        backgroundColor: "#DCF2E7",
-        borderRadius: "25px",
-      },
+      text: "Accommodation",
+      isSearched: false,
+      popular: true,
+      color: "#DCF2E7",
+      searches: "234",
     },
     {
       id: 2,
-      name: "Visa",
-      count: "189",
-      style: {
-        backgroundColor: "#DBEAFE",
-        borderRadius: "25px",
-      },
+      text: "Visa",
+      isSearched: false,
+      popular: true,
+      color: "#DBEAFE",
+      searches: "189",
     },
     {
       id: 3,
-      name: "Course Selection",
-      count: "156",
-      style: {
-        backgroundColor: "#EDE9FE",
-        borderRadius: "25px",
-      },
+      text: "Course Selection",
+      isSearched: false,
+      popular: true,
+      color: "#EDE9FE",
+      searches: "156",
     },
     {
       id: 4,
-      name: "Budget",
-      count: "145",
-      style: {
-        backgroundColor: "#DCF2E7",
-        borderRadius: "25px",
-      },
+      text: "Budget",
+      isSearched: false,
+      popular: true,
+      color: "#DCF2E7",
+      searches: "145",
     },
     {
       id: 5,
-      name: "Cultural Tips",
-      count: "132",
-      style: {
-        backgroundColor: "#FFEDD5",
-        borderRadius: "25px",
-      },
+      text: "Cultural Tips",
+      isSearched: false,
+      popular: true,
+      color: "#FFEDD5",
+      searches: "132",
     },
   ];
 
@@ -72,15 +62,21 @@ const PopularTags: FC = () => {
         style={{ minWidth: "250px", maxWidth: "80%" }}
       >
         {tags.map((tag) => (
-          <SearchTag
-            key={tag.id}
-            id={tag.id}
-            text={tag.name}
-            isSearched={false}
-            popular={true}
-            searches={tag.count}
-            color={tag.style.backgroundColor}
-          />
+          <div
+            onClick={() => {
+              addSelectedTag(tag);
+            }}
+          >
+            <SearchTag
+              key={tag.id}
+              id={tag.id}
+              text={tag.text}
+              isSearched={false}
+              popular={true}
+              searches={tag.searches}
+              color={tag.color}
+            />
+          </div>
         ))}
       </div>
     </div>

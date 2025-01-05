@@ -1,12 +1,15 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 
 import { useState } from "react";
 import { TagProps, SearchTag } from "./search-tag";
+import { TagContext } from "../../infrastructure/tag-context";
 
 const SearchBar: FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
-  const [selectedTags, setSelectedTags] = useState<TagProps[]>([]);
+
+  const { addSelectedTag, selectedTags, removeSelectedTag } =
+    useContext(TagContext);
 
   const searchTags: TagProps[] = [
     {
@@ -15,6 +18,7 @@ const SearchBar: FC = () => {
       isSearched: false,
       popular: false,
       color: "#DCF2E7",
+      searches: "10",
     },
     {
       id: 2,
@@ -22,6 +26,7 @@ const SearchBar: FC = () => {
       isSearched: false,
       popular: false,
       color: "#FFEDD5",
+      searches: "5",
     },
   ];
 
@@ -30,13 +35,13 @@ const SearchBar: FC = () => {
   );
 
   const handleTagClick = (tag: TagProps): void => {
-    setSelectedTags([...selectedTags, tag]);
+    addSelectedTag(tag);
     setSearchTerm("");
     setShowDropdown(false);
   };
 
   const removeTag = (tagId: number): void => {
-    setSelectedTags(selectedTags.filter((tag) => tag.id !== tagId));
+    removeSelectedTag(tagId);
   };
 
   return (
