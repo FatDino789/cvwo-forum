@@ -14,7 +14,6 @@ type LoginResponse = {
 export const getPosts = async (): Promise<PostData[] | ApiError> => {
   try {
     const response = await fetch(`${API_BASE_URL}/posts`);
-
     if (!response.ok) {
       return {
         message: `Error: ${response.status} ${response.statusText}`,
@@ -23,8 +22,36 @@ export const getPosts = async (): Promise<PostData[] | ApiError> => {
     }
 
     const data = await response.json();
-    return data as PostData[];
+
+    const transformedData = data.map((post: PostData) => {
+      // Add null checks and safer date transformation
+      const safeTransformDate = (dateString: string | null | undefined) => {
+        if (!dateString) return new Date().toISOString();
+        try {
+          const date = new Date(dateString);
+          return !isNaN(date.getTime())
+            ? date.toISOString()
+            : new Date().toISOString();
+        } catch {
+          return new Date().toISOString();
+        }
+      };
+
+      return {
+        ...post,
+        created_at: safeTransformDate(post.created_at),
+        updated_at: safeTransformDate(post.updated_at),
+        comments:
+          post.comments?.map((comment) => ({
+            ...comment,
+            created_at: safeTransformDate(comment.created_at),
+          })) || [],
+      };
+    });
+
+    return transformedData;
   } catch (error) {
+    console.error("Error fetching posts:", error);
     return {
       message:
         error instanceof Error ? error.message : "An unknown error occurred",
