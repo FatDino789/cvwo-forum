@@ -12,40 +12,30 @@ const PopularTags: FC = () => {
     {
       id: 1,
       text: "Accommodation",
-      isSearched: false,
-      popular: true,
       color: "#DCF2E7",
       searches: "234",
     },
     {
       id: 2,
       text: "Visa",
-      isSearched: false,
-      popular: true,
       color: "#DBEAFE",
       searches: "189",
     },
     {
       id: 3,
       text: "Course Selection",
-      isSearched: false,
-      popular: true,
       color: "#EDE9FE",
       searches: "156",
     },
     {
       id: 4,
       text: "Budget",
-      isSearched: false,
-      popular: true,
       color: "#DCF2E7",
       searches: "145",
     },
     {
       id: 5,
       text: "Cultural Tips",
-      isSearched: false,
-      popular: true,
       color: "#FFEDD5",
       searches: "132",
     },
@@ -71,7 +61,6 @@ const PopularTags: FC = () => {
               key={tag.id}
               id={tag.id}
               text={tag.text}
-              isSearched={false}
               popular={true}
               searches={tag.searches}
               color={tag.color}

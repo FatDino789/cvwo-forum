@@ -3,9 +3,10 @@ import Post from "../components/forum/post";
 import Discussion from "../components/forum/discussion";
 import "../App.css";
 import { getPosts } from "../infrastructure/api";
+import { PostData } from "../database/database-types";
 
 const ForumSection: FC = () => {
-  const sampleArray: number[] = [1, 2, 3, 4, 5, 6];
+  const [postArray, setPostArray] = useState<PostData[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const openModal = (): void => {
@@ -24,6 +25,8 @@ const ForumSection: FC = () => {
         console.error("Error:", result.message);
         return;
       }
+
+      setPostArray(result);
     };
 
     loadPosts();
@@ -46,9 +49,9 @@ const ForumSection: FC = () => {
               overflowX: "hidden",
             }}
           >
-            {sampleArray.map((id) => (
+            {postArray.map((post, id) => (
               <div key={id} className="mb-3 w-100">
-                <Post onClick={openModal} />
+                <Post onClick={openModal} post={post} />
               </div>
             ))}
           </div>

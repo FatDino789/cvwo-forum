@@ -26,10 +26,10 @@ const tagStyle = (
 export type TagProps = {
   id: number;
   text: string;
-  isSearched: boolean;
+  isSearched?: boolean;
   onRemove?: (tagId: number) => void;
   size?: "small" | "normal";
-  popular: boolean;
+  popular?: boolean;
   searches?: string;
   color: string;
 };
@@ -37,10 +37,10 @@ export type TagProps = {
 export const SearchTag: FC<TagProps> = ({
   id,
   text,
-  isSearched,
+  isSearched = false,
   onRemove,
   size = "normal",
-  popular,
+  popular = false,
   searches = "",
   color,
 }) => {

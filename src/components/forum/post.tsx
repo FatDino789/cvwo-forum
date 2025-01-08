@@ -4,26 +4,26 @@ import { FaEye } from "react-icons/fa";
 import { FaThumbsUp } from "react-icons/fa";
 import { FaCommentDots } from "react-icons/fa6";
 import { TagProps, SearchTag } from "../filter/search-tag";
+import { PostData } from "../../database/database-types";
 
 type PostPros = {
+  post: PostData;
   onClick: () => void;
 };
 
-const Post: FC<PostPros> = ({ onClick }) => {
+const Post: FC<PostPros> = ({ post, onClick }) => {
   const SampleSearchTags: TagProps[] = [
     {
       id: 1,
       text: "Europe",
-      isSearched: false,
-      popular: false,
       color: "#DCF2E7",
+      searches: "10",
     },
     {
       id: 2,
       text: "Summer Exchange",
-      isSearched: false,
-      popular: false,
       color: "#FFEDD5",
+      searches: "5",
     },
   ];
 
@@ -62,9 +62,9 @@ const Post: FC<PostPros> = ({ onClick }) => {
             ></div>
             <div className="flex-grow-1 position-relative">
               <div className="d-flex justify-content-between align-items-center mb-1">
-                <h6 className="m-0">Sample</h6>
+                <h6 className="m-0">{post.title}</h6>
                 <div className="text-muted" style={{ fontSize: "12px" }}>
-                  18 Dec 2024
+                  {post.created_at}
                 </div>
               </div>
 
@@ -79,10 +79,7 @@ const Post: FC<PostPros> = ({ onClick }) => {
                   WebkitBoxOrient: "vertical",
                 }}
               >
-                Sample Text hi guys this is a sample text pls ignore whatever i
-                am saying i am just trying to type something long Sample Text hi
-                guys this is a sample text pls ignore whatever i am saying i am
-                just trying to type something long
+                {post.content}
               </p>
 
               <div
@@ -96,9 +93,7 @@ const Post: FC<PostPros> = ({ onClick }) => {
                         <SearchTag
                           id={tag.id}
                           text={tag.text}
-                          isSearched={false}
                           size="small"
-                          popular={false}
                           color={tag.color}
                         />
                       </div>
@@ -107,19 +102,19 @@ const Post: FC<PostPros> = ({ onClick }) => {
                 <div className="d-flex gap-2">
                   <div className="d-flex gap-1">
                     <text className="text-muted" style={{ fontSize: "12px" }}>
-                      10
+                      {post.views_count}
                     </text>
                     <FaEye color="#6c757d" />
                   </div>
                   <div className="d-flex gap-1">
                     <text className="text-muted" style={{ fontSize: "12px" }}>
-                      5
+                      {post.likes_count}
                     </text>
                     <FaThumbsUp color="#6c757d" />
                   </div>
                   <div className="d-flex gap-1">
                     <text className="text-muted" style={{ fontSize: "12px" }}>
-                      2
+                      {post.comments.length}
                     </text>
                     <FaCommentDots color="#6c757d" />
                   </div>

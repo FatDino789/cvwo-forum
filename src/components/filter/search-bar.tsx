@@ -15,16 +15,12 @@ const SearchBar: FC = () => {
     {
       id: 1,
       text: "Europe",
-      isSearched: false,
-      popular: false,
       color: "#DCF2E7",
       searches: "10",
     },
     {
       id: 2,
       text: "Summer Exchange",
-      isSearched: false,
-      popular: false,
       color: "#FFEDD5",
       searches: "5",
     },
@@ -60,7 +56,6 @@ const SearchBar: FC = () => {
                     text={tag.text}
                     isSearched={true}
                     onRemove={removeTag}
-                    popular={tag.popular}
                     color={tag.color}
                   />
                 </span>
@@ -94,8 +89,6 @@ const SearchBar: FC = () => {
                       <SearchTag
                         id={tag.id}
                         text={tag.text}
-                        isSearched={false}
-                        popular={tag.popular}
                         color={tag.color}
                       />
                     </div>
