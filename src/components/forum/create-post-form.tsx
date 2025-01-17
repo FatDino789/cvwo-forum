@@ -98,6 +98,11 @@ const PostForm: FC<PostFormProps> = ({ isOpen, onClose }) => {
                   }}
                 />
               </div>
+              <div className="mb-3">
+                <label htmlFor="tags" className="form-label text-muted">
+                  Tags
+                </label>
+              </div>
               <div className="mt-auto mb-3">
                 <button type="submit" className="btn btn-primary w-100 py-2">
                   Create Post
