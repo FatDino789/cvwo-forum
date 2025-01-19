@@ -8,25 +8,10 @@ const SearchBar: FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
-  const { addSelectedTag, selectedTags, removeSelectedTag } =
+  const { addSelectedTag, selectedTags, removeSelectedTag, tagArray } =
     useContext(TagContext);
 
-  const searchTags: TagProps[] = [
-    {
-      id: 1,
-      text: "Europe",
-      color: "#DCF2E7",
-      searches: "10",
-    },
-    {
-      id: 2,
-      text: "Summer Exchange",
-      color: "#FFEDD5",
-      searches: "5",
-    },
-  ];
-
-  const filteredTags = searchTags.filter((option) =>
+  const filteredTags = tagArray.filter((option) =>
     option.text.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -36,7 +21,7 @@ const SearchBar: FC = () => {
     setShowDropdown(false);
   };
 
-  const removeTag = (tagId: number): void => {
+  const removeTag = (tagId: string): void => {
     removeSelectedTag(tagId);
   };
 

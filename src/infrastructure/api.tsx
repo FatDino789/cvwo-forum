@@ -1,5 +1,5 @@
 import { PostData, ApiError } from "../database/database-types";
-import { TagData } from "../database/database-types";
+import { TagProps } from "../components/filter/search-tag";
 
 const API_BASE_URL = "http://localhost:8080/api";
 
@@ -62,7 +62,7 @@ export const getPosts = async (): Promise<PostData[] | ApiError> => {
   }
 };
 
-export const getTags = async (): Promise<TagData[] | ApiError> => {
+export const getTags = async (): Promise<TagProps[] | ApiError> => {
   try {
     const response = await fetch(`${API_BASE_URL}/tags`);
     if (!response.ok) {

@@ -4,11 +4,12 @@ import { FaEye } from "react-icons/fa";
 import { FaThumbsUp } from "react-icons/fa";
 import { FaCommentDots } from "react-icons/fa6";
 import { SearchTag } from "../filter/search-tag";
-import { PostData, TagData } from "../../database/database-types";
+import { PostData } from "../../database/database-types";
+import { TagProps } from "../filter/search-tag";
 
 type PostPros = {
   post: PostData;
-  tagArray: TagData[];
+  tagArray: TagProps[];
   onClick: () => void;
 };
 
