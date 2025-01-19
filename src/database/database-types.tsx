@@ -1,10 +1,3 @@
-export type TagData = {
-  id: string;
-  text: string;
-  color: string;
-  searches: number;
-};
-
 export type Comment = {
   id: string;
   user_id: string;

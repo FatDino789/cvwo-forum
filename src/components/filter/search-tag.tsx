@@ -30,7 +30,7 @@ export type TagProps = {
   onRemove?: (tagId: string) => void;
   size?: "small" | "normal";
   popular?: boolean;
-  searches?: string;
+  searches?: number;
   color: string;
 };
 
@@ -41,7 +41,7 @@ export const SearchTag: FC<TagProps> = ({
   onRemove,
   size = "normal",
   popular = false,
-  searches = "",
+  searches = 0,
   color,
 }) => {
   return (

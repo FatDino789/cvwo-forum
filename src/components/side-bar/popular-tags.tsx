@@ -10,34 +10,34 @@ const PopularTags: FC = () => {
 
   const tags: TagProps[] = [
     {
-      id: 1,
+      id: "1",
       text: "Accommodation",
       color: "#DCF2E7",
-      searches: "234",
+      searches: 234,
     },
     {
-      id: 2,
+      id: "2",
       text: "Visa",
       color: "#DBEAFE",
-      searches: "189",
+      searches: 189,
     },
     {
-      id: 3,
+      id: "3",
       text: "Course Selection",
       color: "#EDE9FE",
-      searches: "156",
+      searches: 156,
     },
     {
-      id: 4,
+      id: "4",
       text: "Budget",
       color: "#DCF2E7",
-      searches: "145",
+      searches: 145,
     },
     {
-      id: 5,
+      id: "5",
       text: "Cultural Tips",
       color: "#FFEDD5",
-      searches: "132",
+      searches: 132,
     },
   ];
 

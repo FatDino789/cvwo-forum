@@ -1,4 +1,5 @@
 import { FC, FormEvent, useState, ChangeEvent } from "react";
+import TagSearchBar from "./tag-searchbar";
 
 type PostFormProps = {
   isOpen: boolean;
@@ -98,10 +99,11 @@ const PostForm: FC<PostFormProps> = ({ isOpen, onClose }) => {
                   }}
                 />
               </div>
-              <div className="mb-3">
+              <div className="mb-3 w-full">
                 <label htmlFor="tags" className="form-label text-muted">
-                  Tags
+                  Add Tags (Max 3)
                 </label>
+                <TagSearchBar />
               </div>
               <div className="mt-auto mb-3">
                 <button type="submit" className="btn btn-primary w-100 py-2">
