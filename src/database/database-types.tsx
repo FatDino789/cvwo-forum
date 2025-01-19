@@ -1,15 +1,20 @@
-import { TagProps } from "../components/filter/search-tag";
+export type TagData = {
+  id: string;
+  text: string;
+  color: string;
+  searches: number;
+};
 
 export type Comment = {
-  id: number;
-  user_id: number;
+  id: string;
+  user_id: string;
   content: string;
   created_at: string;
 };
 
 export type PostData = {
-  id: number;
-  user_id: number;
+  id: string;
+  user_id: string;
   title: string;
   content: string;
   picture_url?: string;
@@ -18,7 +23,7 @@ export type PostData = {
   views_count: number;
   discussion_thread?: string;
   comments: Comment[];
-  tags: TagProps[];
+  tags: string[];
   updated_at: string;
 };
 

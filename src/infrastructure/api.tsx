@@ -1,4 +1,5 @@
 import { PostData, ApiError } from "../database/database-types";
+import { TagData } from "../database/database-types";
 
 const API_BASE_URL = "http://localhost:8080/api";
 
@@ -46,12 +47,35 @@ export const getPosts = async (): Promise<PostData[] | ApiError> => {
             ...comment,
             created_at: safeTransformDate(comment.created_at),
           })) || [],
+        tags: post.tags,
       };
     });
 
     return transformedData;
   } catch (error) {
     console.error("Error fetching posts:", error);
+    return {
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+      status: 500,
+    };
+  }
+};
+
+export const getTags = async (): Promise<TagData[] | ApiError> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/tags`);
+    if (!response.ok) {
+      return {
+        message: `Error: ${response.status} ${response.statusText}`,
+        status: response.status,
+      };
+    }
+
+    const tags = await response.json();
+    return tags;
+  } catch (error) {
+    console.error("Error fetching tags:", error);
     return {
       message:
         error instanceof Error ? error.message : "An unknown error occurred",

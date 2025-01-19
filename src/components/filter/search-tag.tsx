@@ -24,10 +24,10 @@ const tagStyle = (
 });
 
 export type TagProps = {
-  id: number;
+  id: string;
   text: string;
   isSearched?: boolean;
-  onRemove?: (tagId: number) => void;
+  onRemove?: (tagId: string) => void;
   size?: "small" | "normal";
   popular?: boolean;
   searches?: string;

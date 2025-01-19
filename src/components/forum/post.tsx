@@ -3,29 +3,30 @@ import { FC } from "react";
 import { FaEye } from "react-icons/fa";
 import { FaThumbsUp } from "react-icons/fa";
 import { FaCommentDots } from "react-icons/fa6";
-import { TagProps, SearchTag } from "../filter/search-tag";
-import { PostData } from "../../database/database-types";
+import { SearchTag } from "../filter/search-tag";
+import { PostData, TagData } from "../../database/database-types";
 
 type PostPros = {
   post: PostData;
+  tagArray: TagData[];
   onClick: () => void;
 };
 
-const Post: FC<PostPros> = ({ post, onClick }) => {
-  const SampleSearchTags: TagProps[] = [
-    {
-      id: 1,
-      text: "Europe",
-      color: "#DCF2E7",
-      searches: "10",
-    },
-    {
-      id: 2,
-      text: "Summer Exchange",
-      color: "#FFEDD5",
-      searches: "5",
-    },
-  ];
+const Post: FC<PostPros> = ({ post, tagArray, onClick }) => {
+  //   const SampleSearchTags: TagProps[] = [
+  //     {
+  //       id: "test1",
+  //       text: "Europe",
+  //       color: "#DCF2E7",
+  //       searches: "10",
+  //     },
+  //     {
+  //       id: "test2",
+  //       text: "Summer Exchange",
+  //       color: "#FFEDD5",
+  //       searches: "5",
+  //     },
+  //   ];
 
   return (
     <div className="row justify-content-center" style={{ marginTop: "2%" }}>
@@ -87,8 +88,8 @@ const Post: FC<PostPros> = ({ post, onClick }) => {
                 style={{ bottom: "-10px" }}
               >
                 <div className="d-flex gap-1">
-                  {SampleSearchTags.length > 0 &&
-                    SampleSearchTags.map((tag) => (
+                  {tagArray.length > 0 &&
+                    tagArray.map((tag) => (
                       <div key={tag.id}>
                         <SearchTag
                           id={tag.id}
