@@ -86,7 +86,7 @@ const ForumSection: FC = () => {
               postArray.map((post, id) => {
                 const tagResult = renderTags(post);
                 return (
-                  <div key={id} className="mb-3 w-100">
+                  <div key={id} className="w-100">
                     <Post
                       onClick={openModal}
                       post={post}

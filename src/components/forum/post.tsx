@@ -13,23 +13,19 @@ type PostPros = {
 };
 
 const Post: FC<PostPros> = ({ post, tagArray, onClick }) => {
-  //   const SampleSearchTags: TagProps[] = [
-  //     {
-  //       id: "test1",
-  //       text: "Europe",
-  //       color: "#DCF2E7",
-  //       searches: "10",
-  //     },
-  //     {
-  //       id: "test2",
-  //       text: "Summer Exchange",
-  //       color: "#FFEDD5",
-  //       searches: "5",
-  //     },
-  //   ];
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    });
+  };
 
   return (
-    <div className="row justify-content-center" style={{ marginTop: "2%" }}>
+    <div className="row justify-content-center">
       <div
         className="col-10 mx-auto"
         style={{ minWidth: "590px", maxWidth: "80%" }}
@@ -41,7 +37,7 @@ const Post: FC<PostPros> = ({ post, tagArray, onClick }) => {
             border: "none",
             transition: "background-color 0.2s ease",
             cursor: "pointer",
-            height: "110px",
+            height: "90px",
           }}
           onMouseEnter={(e) =>
             (e.currentTarget.style.backgroundColor = "#e9ecef")
@@ -62,15 +58,15 @@ const Post: FC<PostPros> = ({ post, tagArray, onClick }) => {
               }}
             ></div>
             <div className="flex-grow-1 position-relative">
-              <div className="d-flex justify-content-between align-items-center mb-1">
+              <div className="d-flex justify-content-between mb-1">
                 <h6 className="m-0">{post.title}</h6>
                 <div className="text-muted" style={{ fontSize: "12px" }}>
-                  {post.created_at}
+                  {formatDate(post.created_at)}
                 </div>
               </div>
 
               <p
-                className="text-muted"
+                className="text-muted text-start"
                 style={{
                   fontSize: "0.9rem",
                   overflow: "hidden",
@@ -85,9 +81,9 @@ const Post: FC<PostPros> = ({ post, tagArray, onClick }) => {
 
               <div
                 className="d-flex justify-content-between align-items-center position-absolute w-100"
-                style={{ bottom: "-10px" }}
+                style={{ bottom: "-15px" }}
               >
-                <div className="d-flex gap-1">
+                <div className="d-flex">
                   {tagArray.length > 0 &&
                     tagArray.map((tag) => (
                       <div key={tag.id}>
@@ -100,7 +96,7 @@ const Post: FC<PostPros> = ({ post, tagArray, onClick }) => {
                       </div>
                     ))}
                 </div>
-                <div className="d-flex gap-2">
+                <div className="d-flex gap-2 py-1">
                   <div className="d-flex gap-1">
                     <text className="text-muted" style={{ fontSize: "12px" }}>
                       {post.views_count}
