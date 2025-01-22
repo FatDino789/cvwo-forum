@@ -1,19 +1,72 @@
-import { FC, FormEvent, useState, ChangeEvent } from "react";
+import { FC, FormEvent, useState, ChangeEvent, useContext } from "react";
 import TagSearchBar from "./tag-searchbar";
+
+import {
+  createNewTag,
+  updateTagSearchCount,
+  createPost,
+} from "../../infrastructure/api";
+import { TagContext } from "../../infrastructure/tag-context";
+import { TagProps } from "../filter/search-tag";
+import { ApiError } from "../../database/database-types";
+import { useAuth } from "../../infrastructure/authentication-context";
 
 type PostFormProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 
+export type CreatePostInput = {
+  user_id: string;
+  title: string;
+  content: string;
+  tags: string[];
+};
+
 const PostForm: FC<PostFormProps> = ({ isOpen, onClose }) => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
+
+  const { tagArray } = useContext(TagContext);
+
+  const { user } = useAuth();
 
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement>
   ): Promise<void> => {
     event.preventDefault();
+
+    if (!user) {
+      console.error("No user found");
+      return;
+    }
+
+    try {
+      const postResponse = await createPost({
+        user_id: user.id,
+        title,
+        content,
+        tags: tagArray.map((tag) => tag.id),
+      });
+
+      if ("status" in postResponse) {
+        console.error("Failed to create post:", postResponse.message);
+        return;
+      }
+
+      const tagResults = await handleSubmitTags(tagArray);
+
+      const tagErrors = tagResults.filter((result) => "status" in result);
+      if (tagErrors.length > 0) {
+        console.error("Some tags failed to process:", tagErrors);
+      }
+
+      setTitle("");
+      setContent("");
+      onClose();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   const handleInputChange = (
@@ -23,6 +76,22 @@ const PostForm: FC<PostFormProps> = ({ isOpen, onClose }) => {
     setter(event.target.value);
   };
 
+  const handleSubmitTags = async (
+    tags: TagProps[]
+  ): Promise<(TagProps | ApiError)[]> => {
+    const results = await Promise.all(
+      tags.map(async (tag) => {
+        if (tag.searches === 0) {
+          return await createNewTag(tag);
+        } else {
+          return await updateTagSearchCount(tag.id);
+        }
+      })
+    );
+
+    return results;
+  };
+
   return (
     <div
       className={`modal fade ${isOpen ? "show" : ""}`}
@@ -30,7 +99,6 @@ const PostForm: FC<PostFormProps> = ({ isOpen, onClose }) => {
         display: isOpen ? "block" : "none",
         backgroundColor: "rgba(0,0,0,0.5)",
       }}
-      onClick={onClose}
     >
       <div
         className="modal-dialog modal-dialog-centered modal-lg"

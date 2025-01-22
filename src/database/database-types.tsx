@@ -10,11 +10,9 @@ export type PostData = {
   user_id: string;
   title: string;
   content: string;
-  picture_url?: string;
   created_at: string;
   likes_count: number;
   views_count: number;
-  discussion_thread?: string;
   comments: Comment[];
   tags: string[];
   updated_at: string;

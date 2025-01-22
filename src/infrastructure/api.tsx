@@ -1,5 +1,7 @@
 import { PostData, ApiError } from "../database/database-types";
 import { TagProps } from "../components/filter/search-tag";
+import { CreatePostInput } from "../components/forum/create-post-form";
+import { v4 } from "uuid";
 
 const API_BASE_URL = "http://localhost:8080/api";
 
@@ -10,8 +12,13 @@ type LoginCredentials = {
 
 type LoginResponse = {
   token: string;
+  user: {
+    id: string;
+    email: string;
+  };
 };
 
+// Post API functions
 export const getPosts = async (): Promise<PostData[] | ApiError> => {
   try {
     const response = await fetch(`${API_BASE_URL}/posts`);
@@ -62,6 +69,46 @@ export const getPosts = async (): Promise<PostData[] | ApiError> => {
   }
 };
 
+export const createPost = async (
+  postData: CreatePostInput
+): Promise<PostData | ApiError> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...postData,
+        id: v4(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        likes_count: 0,
+        views_count: 0,
+        comments: [],
+      }),
+    });
+
+    if (!response.ok) {
+      return {
+        message: `Error: ${response.status} ${response.statusText}`,
+        status: response.status,
+      };
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error creating post:", error);
+    return {
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+      status: 500,
+    };
+  }
+};
+
+// Tag API functions
 export const getTags = async (): Promise<TagProps[] | ApiError> => {
   try {
     const response = await fetch(`${API_BASE_URL}/tags`);
@@ -84,6 +131,73 @@ export const getTags = async (): Promise<TagProps[] | ApiError> => {
   }
 };
 
+export const createNewTag = async (
+  tag: TagProps
+): Promise<TagProps | ApiError> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/tags`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...tag,
+      }),
+    });
+
+    if (!response.ok) {
+      return {
+        message: `Error: ${response.status} ${response.statusText}`,
+        status: response.status,
+      };
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error creating tag:", error);
+    return {
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+      status: 500,
+    };
+  }
+};
+
+export const updateTagSearchCount = async (
+  tagId: string
+): Promise<TagProps | ApiError> => {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/tags/${tagId}/increment-search`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return {
+        message: `Error: ${response.status} ${response.statusText}`,
+        status: response.status,
+      };
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating tag search count:", error);
+    return {
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+      status: 500,
+    };
+  }
+};
+
+// Authentication API functions
 export const loginUser = async (
   credentials: LoginCredentials
 ): Promise<LoginResponse | ApiError> => {
@@ -104,7 +218,23 @@ export const loginUser = async (
     }
 
     const data = await response.json();
-    return data as LoginResponse;
+
+    if (!data.token || !data.user) {
+      return {
+        message: "Invalid server response",
+        status: 500,
+      };
+    }
+
+    console.log(data);
+
+    return {
+      token: data.token,
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+      },
+    };
   } catch (error) {
     return {
       message:
@@ -113,5 +243,4 @@ export const loginUser = async (
     };
   }
 };
-
 export type { LoginCredentials, LoginResponse };

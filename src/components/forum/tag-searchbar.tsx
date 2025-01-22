@@ -83,6 +83,7 @@ const TagSearchBar: FC = () => {
             disabled={addedTags.length > 2}
           />
           <button
+            type="button"
             className="btn btn-link p-0 border-0"
             onClick={() => {
               if (isCreatingTag) {

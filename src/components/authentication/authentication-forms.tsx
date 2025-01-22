@@ -15,7 +15,7 @@ const AuthenticationForm: FC<AuthModalProps> = ({ isOpen, onClose, title }) => {
   const [error, setError] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { setJwtToken } = useAuth();
+  const { setJwtToken, setUser } = useAuth();
 
   const validateForm = (): boolean => {
     if (!email || !password) {
@@ -63,11 +63,14 @@ const AuthenticationForm: FC<AuthModalProps> = ({ isOpen, onClose, title }) => {
     try {
       const result = await loginUser({ email, password });
 
-      if ("message" in result) {
+      if ("status" in result) {
         throw new Error(result.message);
       }
 
+      // Store both token and user data
       setJwtToken(result.token);
+      setUser(result.user);
+
       onClose();
       clearForm();
     } catch (err) {
@@ -183,8 +186,12 @@ const AuthenticationForm: FC<AuthModalProps> = ({ isOpen, onClose, title }) => {
                 </div>
               )}
               <div className="mt-auto mb-3">
-                <button type="submit" className="btn btn-primary w-100 py-2">
-                  {title}
+                <button
+                  type="submit"
+                  className="btn btn-primary w-100 py-2"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Loading..." : title}
                 </button>
               </div>
             </form>
