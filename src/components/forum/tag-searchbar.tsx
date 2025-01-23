@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { TagProps, SearchTag } from "../filter/search-tag";
 import { TagContext } from "../../infrastructure/tag-context";
 import { FaPlus } from "react-icons/fa";
@@ -6,13 +6,21 @@ import tagColors from "../../utility/tag-colors";
 
 import { v4 } from "uuid";
 
-const TagSearchBar: FC = () => {
+type TagSearchBarProps = {
+  addedTags: TagProps[];
+  setAddedTags: React.Dispatch<React.SetStateAction<TagProps[]>>;
+};
+
+const TagSearchBar: FC<TagSearchBarProps> = ({ addedTags, setAddedTags }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
-  const [addedTags, setAddedTags] = useState<TagProps[]>([]);
   const [isCreatingTag, setIsCreatingTag] = useState<boolean>(false);
 
   const { tagArray } = useContext(TagContext);
+
+  useEffect(() => {
+    console.log(addedTags);
+  }, []);
 
   const filteredTags = tagArray.filter((option) =>
     option.text.toLowerCase().includes(searchTerm.toLowerCase())
@@ -81,12 +89,20 @@ const TagSearchBar: FC = () => {
             }}
             onFocus={() => !isCreatingTag && setShowDropdown(true)}
             disabled={addedTags.length > 2}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                if (isCreatingTag && searchTerm) {
+                  handleCreateTag();
+                }
+              }
+            }}
           />
           <button
             type="button"
             className="btn btn-link p-0 border-0"
             onClick={() => {
-              if (isCreatingTag) {
+              if (isCreatingTag && searchTerm) {
                 handleCreateTag();
               }
             }}

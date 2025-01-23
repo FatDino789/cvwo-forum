@@ -1,4 +1,4 @@
-import { FC, FormEvent, useState, ChangeEvent, useContext } from "react";
+import { FC, FormEvent, useState, ChangeEvent } from "react";
 import TagSearchBar from "./tag-searchbar";
 
 import {
@@ -6,7 +6,6 @@ import {
   updateTagSearchCount,
   createPost,
 } from "../../infrastructure/api";
-import { TagContext } from "../../infrastructure/tag-context";
 import { TagProps } from "../filter/search-tag";
 import { ApiError } from "../../database/database-types";
 import { useAuth } from "../../infrastructure/authentication-context";
@@ -26,8 +25,7 @@ export type CreatePostInput = {
 const PostForm: FC<PostFormProps> = ({ isOpen, onClose }) => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-
-  const { tagArray } = useContext(TagContext);
+  const [addedTags, setAddedTags] = useState<TagProps[]>([]);
 
   const { user } = useAuth();
 
@@ -46,7 +44,7 @@ const PostForm: FC<PostFormProps> = ({ isOpen, onClose }) => {
         user_id: user.id,
         title,
         content,
-        tags: tagArray.map((tag) => tag.id),
+        tags: addedTags.map((tag) => tag.id),
       });
 
       if ("status" in postResponse) {
@@ -54,7 +52,7 @@ const PostForm: FC<PostFormProps> = ({ isOpen, onClose }) => {
         return;
       }
 
-      const tagResults = await handleSubmitTags(tagArray);
+      const tagResults = await handleSubmitTags(addedTags);
 
       const tagErrors = tagResults.filter((result) => "status" in result);
       if (tagErrors.length > 0) {
@@ -171,7 +169,10 @@ const PostForm: FC<PostFormProps> = ({ isOpen, onClose }) => {
                 <label htmlFor="tags" className="form-label text-muted">
                   Add Tags (Max 3)
                 </label>
-                <TagSearchBar />
+                <TagSearchBar
+                  addedTags={addedTags}
+                  setAddedTags={setAddedTags}
+                />
               </div>
               <div className="mt-auto mb-3">
                 <button type="submit" className="btn btn-primary w-100 py-2">

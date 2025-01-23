@@ -32,7 +32,6 @@ export const getPosts = async (): Promise<PostData[] | ApiError> => {
     const data = await response.json();
 
     const transformedData = data.map((post: PostData) => {
-      // Add null checks and safer date transformation
       const safeTransformDate = (dateString: string | null | undefined) => {
         if (!dateString) return new Date().toISOString();
         try {
