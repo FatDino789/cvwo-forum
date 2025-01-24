@@ -10,6 +10,18 @@ import { TagContext } from "../infrastructure/tag-context";
 const ForumSection: FC = () => {
   const [postArray, setPostArray] = useState<PostData[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [selectedPost, setSelectedPost] = useState<PostData>({
+    id: "",
+    user_id: "",
+    title: "",
+    content: "",
+    created_at: "",
+    likes_count: 0,
+    views_count: 0,
+    comments: [],
+    tags: [],
+    updated_at: "",
+  });
 
   const { tagArray } = useContext(TagContext);
 
@@ -56,7 +68,11 @@ const ForumSection: FC = () => {
           className="col-10 mx-auto"
           style={{ minWidth: "600px", maxWidth: "80%" }}
         >
-          <Discussion isOpen={modalOpen} onClose={closeModal} />
+          <Discussion
+            isOpen={modalOpen}
+            onClose={closeModal}
+            post={selectedPost}
+          />
           <div
             className="hide-scrollbar"
             style={{
@@ -74,7 +90,10 @@ const ForumSection: FC = () => {
                 return (
                   <div key={id} className="w-100">
                     <Post
-                      onClick={openModal}
+                      onClick={() => {
+                        setSelectedPost(post);
+                        openModal();
+                      }}
                       post={post}
                       tagArray={tagResult}
                     />
