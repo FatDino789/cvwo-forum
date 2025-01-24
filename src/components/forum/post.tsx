@@ -6,6 +6,7 @@ import { FaCommentDots } from "react-icons/fa6";
 import { SearchTag } from "../filter/search-tag";
 import { PostData } from "../../database/database-types";
 import { TagProps } from "../filter/search-tag";
+import formatDate from "../../infrastructure/date-format";
 
 type PostPros = {
   post: PostData;
@@ -14,17 +15,6 @@ type PostPros = {
 };
 
 const Post: FC<PostPros> = ({ post, tagArray, onClick }) => {
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    });
-  };
-
   return (
     <div className="row justify-content-center">
       <div

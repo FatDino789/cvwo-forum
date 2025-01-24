@@ -1,6 +1,8 @@
 import { FC, useState, FormEvent, ChangeEvent } from "react";
 import { loginUser } from "../../infrastructure/api";
 import { useAuth } from "../../infrastructure/authentication-context";
+import { registerUser } from "../../infrastructure/api";
+import { v4 } from "uuid";
 
 type AuthModalProps = {
   isOpen: boolean;
@@ -14,6 +16,7 @@ const AuthenticationForm: FC<AuthModalProps> = ({ isOpen, onClose, title }) => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [error, setError] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>("");
 
   const { setJwtToken, setUser } = useAuth();
 
@@ -61,7 +64,11 @@ const AuthenticationForm: FC<AuthModalProps> = ({ isOpen, onClose, title }) => {
     setIsLoading(true);
 
     try {
-      const result = await loginUser({ email, password });
+      const newId = v4();
+      const result =
+        title === "Register"
+          ? await registerUser({ id: newId, email, password, username })
+          : await loginUser({ email, password });
 
       if ("status" in result) {
         throw new Error(result.message);
@@ -105,7 +112,6 @@ const AuthenticationForm: FC<AuthModalProps> = ({ isOpen, onClose, title }) => {
           left: 0,
           right: 0,
           width: "100%",
-          height: "400px",
           transform: isOpen ? "translateY(0)" : "translateY(100%)",
           transition: "transform 0.3s ease-out",
         }}
@@ -113,7 +119,7 @@ const AuthenticationForm: FC<AuthModalProps> = ({ isOpen, onClose, title }) => {
       >
         <div
           className="modal-content text-start"
-          style={{ borderRadius: "16px 16px 16px 16px", height: "65%" }}
+          style={{ borderRadius: "16px 16px 16px 16px" }}
         >
           <div className="modal-header border-0 justify-content-center">
             <h5 className="modal-title fs-2 fw-bold">{title}</h5>
@@ -165,26 +171,43 @@ const AuthenticationForm: FC<AuthModalProps> = ({ isOpen, onClose, title }) => {
                 />
               </div>
               {title === "Register" && (
-                <div className="mb-3">
-                  <label
-                    htmlFor="confirmPassword"
-                    className="form-label text-muted"
-                  >
-                    Confirm Password
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="confirmPassword"
-                    placeholder="Enter your password"
-                    value={confirmPassword}
-                    onChange={(e): void =>
-                      handleInputChange(e, setConfirmPassword)
-                    }
-                    disabled={isLoading}
-                  />
-                </div>
+                <>
+                  <div className="mb-3">
+                    <label
+                      htmlFor="confirmPassword"
+                      className="form-label text-muted"
+                    >
+                      Confirm Password
+                    </label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      id="confirmPassword"
+                      placeholder="Enter your password"
+                      value={confirmPassword}
+                      onChange={(e): void =>
+                        handleInputChange(e, setConfirmPassword)
+                      }
+                      disabled={isLoading}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="username" className="form-label text-muted">
+                      Username
+                    </label>
+                    <input
+                      type="username"
+                      className="form-control"
+                      id="username"
+                      placeholder="Enter your username"
+                      value={username}
+                      onChange={(e): void => handleInputChange(e, setUsername)}
+                      disabled={isLoading}
+                    />
+                  </div>
+                </>
               )}
+              <div style={{ height: "75px" }}></div>
               <div className="mt-auto mb-3">
                 <button
                   type="submit"

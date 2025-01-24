@@ -1,4 +1,4 @@
-import { PostData, ApiError } from "../database/database-types";
+import { PostData, ApiError, CommentData } from "../database/database-types";
 import { TagProps } from "../components/filter/search-tag";
 import { CreatePostInput } from "../components/forum/create-post-form";
 import { v4 } from "uuid";
@@ -10,12 +10,26 @@ type LoginCredentials = {
   password: string;
 };
 
+type RegisterCredentials = {
+  id: string;
+  email: string;
+  password: string;
+  username: string;
+};
+
 type LoginResponse = {
   token: string;
   user: {
     id: string;
+    username: string;
     email: string;
   };
+};
+
+type UpdatePostField = {
+  field: "likes_count" | "views_count" | "comments";
+  value: string | CommentData[];
+  postId: string;
 };
 
 // Post API functions
@@ -99,6 +113,42 @@ export const createPost = async (
     return data;
   } catch (error) {
     console.error("Error creating post:", error);
+    return {
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+      status: 500,
+    };
+  }
+};
+
+export const updatePost = async ({
+  field,
+  value,
+  postId,
+}: UpdatePostField): Promise<PostData | ApiError> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        [field]: value,
+        updated_at: new Date().toISOString(),
+      }),
+    });
+
+    if (!response.ok) {
+      return {
+        message: `Error: ${response.status} ${response.statusText}`,
+        status: response.status,
+      };
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating post:", error);
     return {
       message:
         error instanceof Error ? error.message : "An unknown error occurred",
@@ -231,6 +281,7 @@ export const loginUser = async (
       token: data.token,
       user: {
         id: data.user.id,
+        username: data.user.username,
         email: data.user.email,
       },
     };
@@ -242,4 +293,57 @@ export const loginUser = async (
     };
   }
 };
+
+export const registerUser = async (credentials: RegisterCredentials) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(credentials),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Registration failed:", errorText);
+      return {
+        message: errorText || "Registration failed",
+        status: response.status,
+      };
+    }
+
+    const data = await response.json();
+
+    if (!data.token || !data.user) {
+      return {
+        message: "Invalid server response",
+        status: 500,
+      };
+    }
+
+    console.log(data);
+
+    // Store the token (e.g., in localStorage)
+    localStorage.setItem("token", data.token);
+
+    return {
+      token: data.token,
+      user: {
+        id: data.user.id,
+        username: data.user.username,
+        email: data.user.email,
+      },
+    };
+  } catch (error) {
+    console.error("Unexpected error during registration:", error);
+
+    return {
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+      status: 500,
+    };
+  }
+};
+
 export type { LoginCredentials, LoginResponse };

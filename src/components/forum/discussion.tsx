@@ -1,11 +1,14 @@
 import { FC, useState, useContext, useEffect } from "react";
 import { PostData } from "../../database/database-types";
+import formatDate from "../../infrastructure/date-format";
 
 import { IoSend } from "react-icons/io5";
 import { TagProps } from "../filter/search-tag";
 import { TagContext } from "../../infrastructure/tag-context";
 import { SearchTag } from "../filter/search-tag";
 import { FaThumbsUp } from "react-icons/fa";
+
+import DiscussionComment from "./discussion-comment";
 
 type DiscussionProps = {
   isOpen: boolean;
@@ -17,18 +20,16 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
   const [comment, setComment] = useState<string>("");
   const [postTagArray, setPostTagArray] = useState<TagProps[]>([]);
 
-  const { tagArray } = useContext(TagContext);
+  const sampleComment = [
+    {
+      id: "1",
+      user_id: "1",
+      content: "This is a test comment.",
+      created_at: new Date().toDateString(),
+    },
+  ];
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    });
-  };
+  const { tagArray } = useContext(TagContext);
 
   const fetchTags = () => {
     const tempTags = tagArray.filter((tag) => post.tags.includes(tag.id));
@@ -37,7 +38,7 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
 
   useEffect(() => {
     fetchTags();
-  }, []);
+  }, [post]);
 
   return (
     <div
@@ -117,14 +118,25 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
                 {post.comments.length} Comments
               </div>
               <div className="d-flex text-muted align-items-center">
-                {post.likes_count}
                 <FaThumbsUp className="mx-2" size={15} />
+                {post.likes_count}
               </div>
             </div>
             <div
-              className="w-100"
+              className="w-100 mb-3"
               style={{ height: "1px", backgroundColor: "#dee2e6" }}
             ></div>
+            <div
+              style={{
+                overflowY: "auto",
+                display: "-webkit-box",
+              }}
+            ></div>
+            {sampleComment.map((comment) => (
+              <div className="gap-2">
+                <DiscussionComment comment={comment} />
+              </div>
+            ))}
           </div>
           <div className="modal-footer border-0 bg-white p-3 mt-auto">
             <div className="position-relative w-100">

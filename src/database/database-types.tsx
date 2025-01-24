@@ -1,4 +1,4 @@
-export type Comment = {
+export type CommentData = {
   id: string;
   user_id: string;
   content: string;
@@ -13,7 +13,7 @@ export type PostData = {
   created_at: string;
   likes_count: number;
   views_count: number;
-  comments: Comment[];
+  comments: CommentData[];
   tags: string[];
   updated_at: string;
 };

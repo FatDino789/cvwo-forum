@@ -8,7 +8,8 @@ import {
 } from "react";
 
 export type User = {
-  id: string; // UUID format
+  id: string;
+  username: string;
   email: string;
 };
 
@@ -62,7 +63,14 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   }, [jwtToken]);
 
   return (
-    <AuthContext.Provider value={{ jwtToken, setJwtToken, user, setUser }}>
+    <AuthContext.Provider
+      value={{
+        jwtToken,
+        setJwtToken,
+        user,
+        setUser,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
