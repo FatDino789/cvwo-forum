@@ -13,6 +13,7 @@ export type User = {
   email: string;
   icon_index: number;
   color_index: number;
+  likes: string[];
 };
 
 export type AuthContextType = {

@@ -8,7 +8,12 @@ import { TagContext } from "../../infrastructure/tag-context";
 import { SearchTag } from "../filter/search-tag";
 import { FaThumbsUp, FaEye } from "react-icons/fa";
 import { profileColors, profileIcons } from "../../assets/profile-pics";
-import { addComment, updatePost } from "../../infrastructure/api";
+import {
+  addComment,
+  updatePost,
+  updateUserLikes,
+  fetchUserLikes,
+} from "../../infrastructure/api";
 import { v4 } from "uuid";
 
 import { useAuth } from "../../infrastructure/authentication-context";
@@ -28,8 +33,8 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
   const [postTagArray, setPostTagArray] = useState<TagProps[]>([]);
   const [inputFocused, setInputFocused] = useState<boolean>(false);
   const [liked, setLiked] = useState<boolean>(false);
-  const [openModal, setOpenModal] = useState(false);
-
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [userLikes, setUserLikes] = useState<string[]>([]);
   const [localPostState, setLocalPostState] = useState<PostData>(post);
 
   const { user } = useAuth();
@@ -68,22 +73,30 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
   };
 
   const handleUpdateLikes = async () => {
+    if (!user || liked) return;
+
     const newLikeCount = post.likes_count + 1;
     const newLikes = {
       field: "likes_count",
       value: newLikeCount,
       postId: post.id,
     };
+
     try {
       setLocalPostState((prev) => ({
         ...prev,
         likes_count: newLikeCount,
       }));
-      const result = await updatePost(newLikes);
-      setLiked(true);
+      await updatePost(newLikes);
+
+      const result = await updateUserLikes({
+        userId: user.id,
+        postId: post.id,
+      });
+
       console.log(result);
     } catch (error) {
-      console.error("Error adding likes:", error);
+      console.error("Error updating likes:", error);
     }
   };
 
@@ -112,6 +125,28 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
     handleUpdateViews();
     setLocalPostState(post);
   }, [post]);
+
+  useEffect(() => {
+    const getLikes = async () => {
+      if (user?.id) {
+        const result = await fetchUserLikes(user.id);
+        console.log(result);
+        if (!("message" in result)) {
+          setUserLikes(result);
+        }
+      }
+    };
+
+    getLikes();
+  }, []);
+
+  useEffect(() => {
+    if (userLikes?.includes(post.id)) {
+      setLiked(true);
+    } else {
+      setLiked(false);
+    }
+  }, [userLikes, post.id]);
 
   const closeModal = () => {
     setOpenModal(false);
@@ -202,6 +237,7 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
                   onClick={() => {
                     if (user) {
                       handleUpdateLikes();
+                      setUserLikes([...userLikes, post.id]);
                     } else {
                       setOpenModal(true);
                     }

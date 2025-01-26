@@ -27,12 +27,18 @@ type LoginResponse = {
     email: string;
     icon_index: number;
     color_index: number;
+    likes: string[];
   };
 };
 
 type UpdatePostField = {
   field: string;
   value: number;
+  postId: string;
+};
+
+type UpdateLikesInput = {
+  userId: string;
   postId: string;
 };
 
@@ -395,6 +401,7 @@ export const loginUser = async (
         email: data.user.email,
         icon_index: data.user.icon_index,
         color_index: data.user.color_index,
+        likes: data.user.likes,
       },
     };
   } catch (error) {
@@ -444,11 +451,11 @@ export const registerUser = async (credentials: RegisterCredentials) => {
         email: data.user.email,
         icon_index: data.user.icon_index,
         color_index: data.user.color_index,
+        likes: data.user.likes,
       },
     };
   } catch (error) {
     console.error("Unexpected error during registration:", error);
-
     return {
       message:
         error instanceof Error ? error.message : "An unknown error occurred",
@@ -457,4 +464,66 @@ export const registerUser = async (credentials: RegisterCredentials) => {
   }
 };
 
+export const updateUserLikes = async ({
+  userId,
+  postId,
+}: UpdateLikesInput): Promise<LoginResponse | ApiError> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}/likes`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        field: "likes",
+        value: postId,
+      }),
+    });
+
+    if (!response.ok) {
+      return {
+        message: `Error: ${response.status} ${response.statusText}`,
+        status: response.status,
+      };
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    return {
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+      status: 500,
+    };
+  }
+};
+
+export const fetchUserLikes = async (
+  userId: string
+): Promise<string[] | ApiError> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}/likes`, {
+      method: "GET", // Changed to GET method
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      return {
+        message: `Error: ${response.status} ${response.statusText}`,
+        status: response.status,
+      };
+    }
+
+    const data = await response.json();
+    return data.likes;
+  } catch (error) {
+    return {
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+      status: 500,
+    };
+  }
+};
 export type { LoginCredentials, LoginResponse };

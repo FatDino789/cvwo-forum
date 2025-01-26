@@ -86,6 +86,7 @@ const AuthenticationForm: FC<AuthModalProps> = ({ isOpen, onClose, title }) => {
       // Store both token and user data
       setJwtToken(result.token);
       setUser(result.user);
+      console.log(result.user);
 
       onClose();
       clearForm();
