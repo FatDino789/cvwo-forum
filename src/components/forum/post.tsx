@@ -8,6 +8,9 @@ import { PostData } from "../../database/database-types";
 import { TagProps } from "../filter/search-tag";
 import formatDate from "../../infrastructure/date-format";
 
+import Animal from "react-animals";
+import { profileIcons, profileColors } from "../../assets/profile-pics";
+
 type PostPros = {
   post: PostData;
   tagArray: TagProps[];
@@ -39,7 +42,7 @@ const Post: FC<PostPros> = ({ post, tagArray, onClick }) => {
           onClick={onClick}
         >
           <div className="d-flex align-items-start gap-2">
-            <div
+            {/* <div
               style={{
                 flexShrink: 0,
                 width: "40px",
@@ -47,7 +50,13 @@ const Post: FC<PostPros> = ({ post, tagArray, onClick }) => {
                 backgroundColor: "#DC3545",
                 borderRadius: "8px",
               }}
-            ></div>
+            ></div> */}
+            <Animal
+              name={profileIcons[post.icon_index]}
+              color={profileColors[post.color_index]}
+              size="40px"
+              rounded
+            />
             <div className="flex-grow-1 position-relative">
               <div className="d-flex justify-content-between mb-1">
                 <h6 className="m-0">{post.title}</h6>

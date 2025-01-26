@@ -2,6 +2,9 @@ import { FC } from "react";
 import { CommentData } from "../../database/database-types";
 import formatDate from "../../infrastructure/date-format";
 import { MdOutlineReply } from "react-icons/md";
+import { profileIcons, profileColors } from "../../assets/profile-pics";
+
+import Animal from "react-animals";
 
 type DiscussionCommentProps = {
   comment: CommentData;
@@ -13,7 +16,7 @@ const DiscussionComment: FC<DiscussionCommentProps> = ({ comment }) => {
       <div
         className="d-flex justify-content-between p-3 w-100"
         style={{
-          maxWidth: "95%",
+          maxWidth: "100%",
           borderRadius: "8px",
           transition: "background-color 0.2s ease",
           cursor: "pointer",
@@ -23,20 +26,16 @@ const DiscussionComment: FC<DiscussionCommentProps> = ({ comment }) => {
         }
         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "white")}
       >
-        <div className="d-flex">
-          <div
-            style={{
-              flexShrink: 0,
-              width: "40px",
-              height: "40px",
-              backgroundColor: "#DC3545",
-              borderRadius: "8px",
-              marginRight: "10px",
-            }}
+        <div className="d-flex gap-2">
+          <Animal
+            name={profileIcons[comment?.icon_index]}
+            color={profileColors[comment?.color_index]}
+            rounded
+            size="45px"
           />
           <div className="d-flex flex-column">
             <div className="d-flex align-items-center gap-2">
-              <div className="text-muted fs-10">Username</div>
+              <div className="text-muted fs-10">{comment.username}</div>
               <div className="text-muted">{formatDate(comment.created_at)}</div>
             </div>
             <div className="text-start">{comment.content}</div>

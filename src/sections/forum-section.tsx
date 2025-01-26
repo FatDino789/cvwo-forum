@@ -21,6 +21,9 @@ const ForumSection: FC = () => {
     comments: [],
     tags: [],
     updated_at: "",
+    icon_index: 0,
+    color_index: 0,
+    username: "",
   });
 
   const { tagArray } = useContext(TagContext);

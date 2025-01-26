@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useContext, useState } from "react";
 import { TagProps, SearchTag } from "../filter/search-tag";
 import { TagContext } from "../../infrastructure/tag-context";
 import { FaPlus } from "react-icons/fa";
@@ -17,10 +17,6 @@ const TagSearchBar: FC<TagSearchBarProps> = ({ addedTags, setAddedTags }) => {
   const [isCreatingTag, setIsCreatingTag] = useState<boolean>(false);
 
   const { tagArray } = useContext(TagContext);
-
-  useEffect(() => {
-    console.log(addedTags);
-  }, []);
 
   const filteredTags = tagArray.filter((option) =>
     option.text.toLowerCase().includes(searchTerm.toLowerCase())

@@ -15,6 +15,8 @@ type RegisterCredentials = {
   email: string;
   password: string;
   username: string;
+  iconIndex: number;
+  colorIndex: number;
 };
 
 type LoginResponse = {
@@ -23,6 +25,8 @@ type LoginResponse = {
     id: string;
     username: string;
     email: string;
+    icon_index: number;
+    color_index: number;
   };
 };
 
@@ -157,6 +161,41 @@ export const updatePost = async ({
   }
 };
 
+// Comment API functions
+export const addComment = async (
+  postId: string,
+  comment: CommentData
+): Promise<PostData | ApiError> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        field: "comments",
+        value: comment,
+        postId,
+      }),
+    });
+
+    if (!response.ok) {
+      return {
+        message: `Error: ${response.status} ${response.statusText}`,
+        status: response.status,
+      };
+    }
+
+    return await response.json();
+  } catch (error) {
+    return {
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+      status: 500,
+    };
+  }
+};
+
 // Tag API functions
 export const getTags = async (): Promise<TagProps[] | ApiError> => {
   try {
@@ -275,14 +314,14 @@ export const loginUser = async (
       };
     }
 
-    console.log(data);
-
     return {
       token: data.token,
       user: {
         id: data.user.id,
         username: data.user.username,
         email: data.user.email,
+        icon_index: data.user.icon_index,
+        color_index: data.user.color_index,
       },
     };
   } catch (error) {
@@ -322,9 +361,6 @@ export const registerUser = async (credentials: RegisterCredentials) => {
       };
     }
 
-    console.log(data);
-
-    // Store the token (e.g., in localStorage)
     localStorage.setItem("token", data.token);
 
     return {
@@ -333,6 +369,8 @@ export const registerUser = async (credentials: RegisterCredentials) => {
         id: data.user.id,
         username: data.user.username,
         email: data.user.email,
+        icon_index: data.user.icon_index,
+        color_index: data.user.color_index,
       },
     };
   } catch (error) {

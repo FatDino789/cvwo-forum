@@ -7,7 +7,12 @@ import { TagProps } from "../filter/search-tag";
 import { TagContext } from "../../infrastructure/tag-context";
 import { SearchTag } from "../filter/search-tag";
 import { FaThumbsUp } from "react-icons/fa";
+import { profileColors, profileIcons } from "../../assets/profile-pics";
+import { addComment } from "../../infrastructure/api";
+import { v4 } from "uuid";
 
+import { useAuth } from "../../infrastructure/authentication-context";
+import Animal from "react-animals";
 import DiscussionComment from "./discussion-comment";
 
 type DiscussionProps = {
@@ -19,21 +24,42 @@ type DiscussionProps = {
 const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
   const [comment, setComment] = useState<string>("");
   const [postTagArray, setPostTagArray] = useState<TagProps[]>([]);
+  const [inputFocused, setInputFocused] = useState<boolean>(false);
 
-  const sampleComment = [
-    {
-      id: "1",
-      user_id: "1",
-      content: "This is a test comment.",
-      created_at: new Date().toDateString(),
-    },
-  ];
+  const { user } = useAuth();
 
   const { tagArray } = useContext(TagContext);
 
   const fetchTags = () => {
     const tempTags = tagArray.filter((tag) => post.tags.includes(tag.id));
     setPostTagArray(tempTags);
+  };
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  const handleSubmitComment = async () => {
+    if (!comment.trim() || !user) return;
+
+    const newComment = {
+      id: v4(),
+      content: comment.trim(),
+      created_at: new Date().toISOString(),
+
+      user_id: user.id,
+      username: user.username,
+      icon_index: user.icon_index,
+      color_index: user.color_index,
+    };
+
+    try {
+      const result = await addComment(post.id, newComment);
+      console.log(result);
+      setComment("");
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
   };
 
   useEffect(() => {
@@ -80,18 +106,15 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
             style={{ overflow: "auto" }}
           >
             <div className="d-flex gap-2">
-              <div
-                style={{
-                  flexShrink: 0,
-                  width: "55px",
-                  height: "55px",
-                  backgroundColor: "#DC3545",
-                  borderRadius: "8px",
-                }}
-              ></div>
+              <Animal
+                name={profileIcons[post.icon_index]}
+                color={profileColors[post.color_index]}
+                size="55px"
+                rounded
+              />
               <div className="flex-grow-1">
                 <div className="d-flex align-items-center gap-2">
-                  <div className="text-muted">Username</div>
+                  <div className="text-muted">{post.username}</div>
                   <div className="text-muted">
                     {formatDate(post.created_at)}
                   </div>
@@ -132,7 +155,7 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
                 display: "-webkit-box",
               }}
             ></div>
-            {sampleComment.map((comment) => (
+            {post?.comments.map((comment) => (
               <div className="gap-2">
                 <DiscussionComment comment={comment} />
               </div>
@@ -140,17 +163,36 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
           </div>
           <div className="modal-footer border-0 bg-white p-3 mt-auto">
             <div className="position-relative w-100">
+              {!inputFocused && (
+                <div
+                  style={{
+                    position: "absolute",
+                    left: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    zIndex: 2,
+                  }}
+                >
+                  <Animal
+                    name={profileIcons[user?.icon_index || 0]}
+                    color={profileColors[user?.color_index || 0]}
+                    size="30px"
+                  />
+                </div>
+              )}
               <input
                 type="text"
                 className="form-control pe-5 rounded-pill"
-                placeholder="Add a comment..."
+                placeholder={inputFocused ? "" : "        Add a comment..."}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && comment.trim()) {
-                    setComment("");
+                    handleSubmitComment();
                   }
                 }}
+                onFocus={() => setInputFocused(true)}
+                onBlur={() => setInputFocused(false)}
               />
               <button
                 className="btn position-absolute top-50 end-0 translate-middle-y pe-3"
@@ -184,6 +226,7 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
                       "text-secondary"
                     )
                   }
+                  onClick={handleSubmitComment}
                 />
               </button>
             </div>

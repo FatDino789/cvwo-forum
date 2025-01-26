@@ -4,6 +4,9 @@ import CreatePostButton from "../components/forum/create-post-button";
 import { PiLockKeyOpen, PiPencilSimpleDuotone } from "react-icons/pi";
 import { SlLogout } from "react-icons/sl";
 import { useAuth } from "../infrastructure/authentication-context";
+import { profileIcons, profileColors } from "../assets/profile-pics";
+
+import Animal from "react-animals";
 
 const LoginButton: FC = () => {
   return (
@@ -43,7 +46,7 @@ const Title: FC = () => {
 };
 
 const TopBar: FC = () => {
-  const { jwtToken } = useAuth();
+  const { jwtToken, user } = useAuth();
 
   return (
     <div className="mt-5">
@@ -52,7 +55,7 @@ const TopBar: FC = () => {
           <Title />
         </div>
         <div className="position-absolute end-0 me-5 top-0 mt-4">
-          <div className="d-flex gap-2">
+          <div className="d-flex gap-2 align-items-center">
             {!jwtToken ? (
               <>
                 <LoginButton />
@@ -62,6 +65,16 @@ const TopBar: FC = () => {
               <>
                 <CreatePostButton />
                 <LogoutButton />
+                <div
+                  style={{ width: "60px", height: "60px" }}
+                  className="d-flex align-items-center justify-content-center"
+                >
+                  <Animal
+                    name={profileIcons[user?.icon_index || 0]}
+                    color={profileColors[user?.color_index || 0]}
+                    size="60px"
+                  />
+                </div>
               </>
             )}
           </div>

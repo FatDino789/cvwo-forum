@@ -32,7 +32,7 @@ const AuthenticationButton: FC<ButtonProps> = ({
   hoverColor,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const { setJwtToken } = useAuth();
+  const { setJwtToken, setUser } = useAuth();
 
   const buttonStyle: ButtonStyle = {
     width: "125px",
@@ -50,6 +50,7 @@ const AuthenticationButton: FC<ButtonProps> = ({
   };
 
   const Logout = (): void => {
+    setUser(null);
     setJwtToken("");
   };
 

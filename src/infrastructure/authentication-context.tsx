@@ -11,6 +11,8 @@ export type User = {
   id: string;
   username: string;
   email: string;
+  icon_index: number;
+  color_index: number;
 };
 
 export type AuthContextType = {

@@ -65,9 +65,18 @@ const AuthenticationForm: FC<AuthModalProps> = ({ isOpen, onClose, title }) => {
 
     try {
       const newId = v4();
+      const randomIcon = Math.floor(Math.random() * 68);
+      const randomColor = Math.floor(Math.random() * 148);
       const result =
         title === "Register"
-          ? await registerUser({ id: newId, email, password, username })
+          ? await registerUser({
+              id: newId,
+              email,
+              password,
+              username,
+              iconIndex: randomIcon,
+              colorIndex: randomColor,
+            })
           : await loginUser({ email, password });
 
       if ("status" in result) {
