@@ -7,9 +7,6 @@ import { TagProvider } from "./infrastructure/tag-context";
 import { AuthProvider } from "./infrastructure/authentication-context";
 import { FilterProvider } from "./infrastructure/filter-context";
 import LeftSideBar from "./sections/left-side-bar";
-import RightSideBar from "./sections/right-side-bar";
-
-import { useAuth } from "./infrastructure/authentication-context";
 
 const App: FC = () => {
   return (
@@ -24,8 +21,6 @@ const App: FC = () => {
 };
 
 const AppContent: FC = () => {
-  const { jwtToken } = useAuth();
-
   return (
     <div className="container-fluid">
       <div className="row w-100">
@@ -43,9 +38,7 @@ const AppContent: FC = () => {
         <div
           className="col d-flex justify-content-center align-items-center"
           style={{ width: "25%" }}
-        >
-          {jwtToken && <RightSideBar />}
-        </div>
+        ></div>
       </div>
     </div>
   );

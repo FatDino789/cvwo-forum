@@ -8,7 +8,7 @@ type TagContextType = {
   addSelectedTag: (tag: TagProps) => void;
   removeSelectedTag: (tagId: string) => void;
   tagArray: TagProps[];
-  setTagArray: (tags: TagProps[]) => void;
+  setTagArray: React.Dispatch<React.SetStateAction<TagProps[]>>;
   isLoading: boolean;
 };
 

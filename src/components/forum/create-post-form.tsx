@@ -80,7 +80,10 @@ const PostForm: FC<PostFormProps> = ({ isOpen, onClose }) => {
     const results = await Promise.all(
       tags.map(async (tag) => {
         if (tag.searches === 0) {
-          return await createNewTag(tag);
+          return await createNewTag({
+            ...tag,
+            searches: 1,
+          });
         } else {
           return await updateTagSearchCount(tag.id);
         }

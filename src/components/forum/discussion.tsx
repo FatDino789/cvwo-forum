@@ -15,6 +15,8 @@ import { useAuth } from "../../infrastructure/authentication-context";
 import Animal from "react-animals";
 import DiscussionComment from "./discussion-comment";
 
+import PopUpModal from "./popup-modal";
+
 type DiscussionProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -26,6 +28,7 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
   const [postTagArray, setPostTagArray] = useState<TagProps[]>([]);
   const [inputFocused, setInputFocused] = useState<boolean>(false);
   const [liked, setLiked] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const [localPostState, setLocalPostState] = useState<PostData>(post);
 
@@ -110,6 +113,10 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
     setLocalPostState(post);
   }, [post]);
 
+  const closeModal = () => {
+    setOpenModal(false);
+  };
+
   return (
     <div
       className={`modal fade ${isOpen ? "show" : ""}`}
@@ -119,6 +126,7 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
       }}
       onClick={onClose}
     >
+      {openModal && <PopUpModal isOpen={openModal} onClose={closeModal} />}
       <div
         className="modal-dialog modal-dialog-centered modal-lg"
         style={{
@@ -191,7 +199,13 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
                 <FaThumbsUp
                   className="mx-2"
                   size={15}
-                  onClick={handleUpdateLikes}
+                  onClick={() => {
+                    if (user) {
+                      handleUpdateLikes();
+                    } else {
+                      setOpenModal(true);
+                    }
+                  }}
                   color={liked ? "blue" : "gray"}
                 />
                 {localPostState.likes_count}
@@ -203,13 +217,17 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
             ></div>
             {localPostState?.comments.map((comment) => (
               <div className="gap-2" key={comment.id}>
-                <DiscussionComment comment={comment} />
+                <DiscussionComment
+                  comment={comment}
+                  setComment={setComment}
+                  setOpenModal={setOpenModal}
+                />
               </div>
             ))}
           </div>
           <div className="modal-footer border-0 bg-white p-3 mt-auto">
             <div className="position-relative w-100">
-              {!inputFocused && (
+              {!inputFocused && user && !comment && (
                 <div
                   style={{
                     position: "absolute",
@@ -229,7 +247,9 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
               <input
                 type="text"
                 className="form-control pe-5 rounded-pill"
-                placeholder={inputFocused ? "" : "        Add a comment..."}
+                placeholder={
+                  inputFocused ? "" : user ? "        Add a comment..." : ""
+                }
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 onKeyDown={(e) => {
@@ -239,6 +259,12 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
                 }}
                 onFocus={() => setInputFocused(true)}
                 onBlur={() => setInputFocused(false)}
+                onClick={() => {
+                  if (!user) {
+                    setOpenModal(true);
+                  }
+                }}
+                disabled={!user}
               />
               <button
                 className="btn position-absolute top-50 end-0 translate-middle-y pe-3"

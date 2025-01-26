@@ -2,7 +2,11 @@ import { FC, useEffect, useState, useContext } from "react";
 import Post from "../components/forum/post";
 import Discussion from "../components/forum/discussion";
 import "../App.css";
-import { getPosts, setupPostEventListener } from "../infrastructure/api";
+import {
+  getPosts,
+  setupPostEventListener,
+  setupTagEventListener,
+} from "../infrastructure/api";
 import { PostData } from "../database/database-types";
 import { TagProps } from "../components/filter/search-tag";
 import { TagContext } from "../infrastructure/tag-context";
@@ -30,7 +34,7 @@ const ForumSection: FC = () => {
   });
   const [filteredPosts, setFilteredPosts] = useState<PostData[]>([]);
 
-  const { tagArray, selectedTags } = useContext(TagContext);
+  const { tagArray, selectedTags, setTagArray } = useContext(TagContext);
 
   const { selected, selectedOrder, searchTerm } = useContext(FilterContext);
 
@@ -53,6 +57,12 @@ const ForumSection: FC = () => {
       if (!("message" in result)) setPostArray(result);
     };
     loadPosts();
+    return () => eventSource.close();
+  }, []);
+
+  useEffect(() => {
+    const eventSource = setupTagEventListener(setTagArray);
+
     return () => eventSource.close();
   }, []);
 

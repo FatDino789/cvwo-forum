@@ -3,14 +3,23 @@ import { CommentData } from "../../database/database-types";
 import formatDate from "../../infrastructure/date-format";
 import { MdOutlineReply } from "react-icons/md";
 import { profileIcons, profileColors } from "../../assets/profile-pics";
+import { useAuth } from "../../infrastructure/authentication-context";
 
 import Animal from "react-animals";
 
 type DiscussionCommentProps = {
   comment: CommentData;
+  setComment: (comment: string) => void;
+  setOpenModal: (isOpen: boolean) => void;
 };
 
-const DiscussionComment: FC<DiscussionCommentProps> = ({ comment }) => {
+const DiscussionComment: FC<DiscussionCommentProps> = ({
+  comment,
+  setComment,
+  setOpenModal,
+}) => {
+  const { user } = useAuth();
+
   return (
     <div className="container d-flex justify-content-center">
       <div
@@ -48,6 +57,13 @@ const DiscussionComment: FC<DiscussionCommentProps> = ({ comment }) => {
             style={{ transition: "color 0.2s ease" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#007bff")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "grey")}
+            onClick={() => {
+              if (user) {
+                setComment("@" + comment.username);
+              } else {
+                setOpenModal(true);
+              }
+            }}
           />
         </div>
       </div>

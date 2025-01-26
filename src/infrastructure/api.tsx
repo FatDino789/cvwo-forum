@@ -326,6 +326,38 @@ export const updateTagSearchCount = async (
   }
 };
 
+export const setupTagEventListener = (
+  setTagArray: React.Dispatch<React.SetStateAction<TagProps[]>>
+) => {
+  const eventSource = new EventSource(`${API_BASE_URL}/events/tags`);
+
+  eventSource.onmessage = (event) => {
+    const data = JSON.parse(event.data) as TagProps[];
+    setTagArray(() => [...data]);
+  };
+
+  eventSource.addEventListener("tag_update", (event) => {
+    const updatedTag = JSON.parse(event.data) as TagProps;
+    setTagArray((prevTags) =>
+      prevTags.map((tag) => (tag.id === updatedTag.id ? updatedTag : tag))
+    );
+  });
+
+  eventSource.addEventListener("tag_created", (event) => {
+    const newTag = JSON.parse(event.data) as TagProps;
+    setTagArray((prevTags) => [...prevTags, newTag]);
+  });
+
+  eventSource.addEventListener("tag_deleted", (event) => {
+    const deletedTagId = JSON.parse(event.data) as string;
+    setTagArray((prevTags) =>
+      prevTags.filter((tag) => tag.id !== deletedTagId)
+    );
+  });
+
+  return eventSource;
+};
+
 // Authentication API functions
 export const loginUser = async (
   credentials: LoginCredentials
