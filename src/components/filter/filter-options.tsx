@@ -1,11 +1,12 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 
 import { FaEye } from "react-icons/fa";
 import { FaThumbsUp } from "react-icons/fa";
 import { FaCommentDots } from "react-icons/fa6";
 import { HiSortDescending } from "react-icons/hi";
 import { HiSortAscending } from "react-icons/hi";
-import { useState } from "react";
+
+import { FilterContext } from "../../infrastructure/filter-context";
 
 type FilterProps = {
   selected: number;
@@ -127,8 +128,8 @@ const OrderButton: FC<OrderProps> = ({ selectedOrder, setSelectedOrder }) => {
 };
 
 const FilterStrip: FC = () => {
-  const [selected, setSelected] = useState<number>(-1);
-  const [selectedOrder, setSelectedOrder] = useState<number>(0);
+  const { selected, setSelected, selectedOrder, setSelectedOrder } =
+    useContext(FilterContext);
 
   return (
     <div className="container" style={{ marginTop: "10px" }}>
@@ -148,8 +149,6 @@ const FilterStrip: FC = () => {
                 <MostCommented selected={selected} setSelected={setSelected} />
               </div>
             </div>
-
-            {/* Right side with order button */}
             <div>
               <OrderButton
                 selectedOrder={selectedOrder}

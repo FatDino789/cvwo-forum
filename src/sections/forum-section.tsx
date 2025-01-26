@@ -6,6 +6,9 @@ import { getPosts, setupPostEventListener } from "../infrastructure/api";
 import { PostData } from "../database/database-types";
 import { TagProps } from "../components/filter/search-tag";
 import { TagContext } from "../infrastructure/tag-context";
+import { FilterContext } from "../infrastructure/filter-context";
+
+import { PiSmileySad } from "react-icons/pi";
 
 const ForumSection: FC = () => {
   const [postArray, setPostArray] = useState<PostData[]>([]);
@@ -25,8 +28,11 @@ const ForumSection: FC = () => {
     color_index: 0,
     username: "",
   });
+  const [filteredPosts, setFilteredPosts] = useState<PostData[]>([]);
 
-  const { tagArray } = useContext(TagContext);
+  const { tagArray, selectedTags } = useContext(TagContext);
+
+  const { selected, selectedOrder, searchTerm } = useContext(FilterContext);
 
   const openModal = (): void => {
     setModalOpen(true);
@@ -78,6 +84,46 @@ const ForumSection: FC = () => {
     return tempTags;
   };
 
+  useEffect(() => {
+    let updatedPosts = [...postArray];
+
+    if (selectedTags.length > 0) {
+      updatedPosts = updatedPosts.filter((post) =>
+        selectedTags.every((tag) => post.tags.includes(tag.id))
+      );
+    }
+
+    if (searchTerm.trim() !== "") {
+      updatedPosts = updatedPosts.filter(
+        (post) =>
+          post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          post.content.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    updatedPosts.sort((a, b) => {
+      if (selectedOrder === 0) {
+        return (
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+      } else {
+        return (
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+      }
+    });
+
+    if (selected === 0) {
+      updatedPosts.sort((a, b) => b.views_count - a.views_count);
+    } else if (selected === 1) {
+      updatedPosts.sort((a, b) => b.likes_count - a.likes_count);
+    } else if (selected === 2) {
+      updatedPosts.sort((a, b) => b.comments.length - a.comments.length);
+    }
+
+    setFilteredPosts(updatedPosts);
+  }, [selected, selectedOrder, searchTerm, selectedTags, postArray]);
+
   return (
     <div className="container" style={{ marginTop: "2%" }}>
       <div className="row justify-content-center">
@@ -99,10 +145,22 @@ const ForumSection: FC = () => {
               overflowX: "hidden",
             }}
           >
-            {tagArray.length === 0 ? (
-              <div>Loading...</div>
+            {filteredPosts.length === 0 ? (
+              <div
+                className="d-flex flex-column justify-content-center align-items-center"
+                style={{
+                  height: "60%",
+                  textAlign: "center",
+                }}
+              >
+                <PiSmileySad size={50} />
+                <div>
+                  There are no search results with these filters. Please try
+                  again
+                </div>
+              </div>
             ) : (
-              postArray.map((post, id) => {
+              filteredPosts.map((post, id) => {
                 const tagResult = renderTags(post);
                 return (
                   <div key={id} className="w-100">

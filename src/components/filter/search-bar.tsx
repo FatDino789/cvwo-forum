@@ -3,13 +3,15 @@ import { FC, useContext } from "react";
 import { useState } from "react";
 import { TagProps, SearchTag } from "./search-tag";
 import { TagContext } from "../../infrastructure/tag-context";
+import { FilterContext } from "../../infrastructure/filter-context";
 
 const SearchBar: FC = () => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
   const { addSelectedTag, selectedTags, removeSelectedTag, tagArray } =
     useContext(TagContext);
+
+  const { searchTerm, setSearchTerm } = useContext(FilterContext);
 
   const filteredTags = tagArray.filter((option) =>
     option.text.toLowerCase().includes(searchTerm.toLowerCase())

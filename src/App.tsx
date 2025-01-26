@@ -5,6 +5,7 @@ import ForumSection from "./sections/forum-section";
 
 import { TagProvider } from "./infrastructure/tag-context";
 import { AuthProvider } from "./infrastructure/authentication-context";
+import { FilterProvider } from "./infrastructure/filter-context";
 import LeftSideBar from "./sections/left-side-bar";
 import RightSideBar from "./sections/right-side-bar";
 
@@ -13,9 +14,11 @@ import { useAuth } from "./infrastructure/authentication-context";
 const App: FC = () => {
   return (
     <AuthProvider>
-      <TagProvider>
-        <AppContent />
-      </TagProvider>
+      <FilterProvider>
+        <TagProvider>
+          <AppContent />
+        </TagProvider>
+      </FilterProvider>
     </AuthProvider>
   );
 };
