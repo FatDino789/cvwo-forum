@@ -6,9 +6,9 @@ import { IoSend } from "react-icons/io5";
 import { TagProps } from "../filter/search-tag";
 import { TagContext } from "../../infrastructure/tag-context";
 import { SearchTag } from "../filter/search-tag";
-import { FaThumbsUp } from "react-icons/fa";
+import { FaThumbsUp, FaEye } from "react-icons/fa";
 import { profileColors, profileIcons } from "../../assets/profile-pics";
-import { addComment } from "../../infrastructure/api";
+import { addComment, updatePost } from "../../infrastructure/api";
 import { v4 } from "uuid";
 
 import { useAuth } from "../../infrastructure/authentication-context";
@@ -25,6 +25,9 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
   const [comment, setComment] = useState<string>("");
   const [postTagArray, setPostTagArray] = useState<TagProps[]>([]);
   const [inputFocused, setInputFocused] = useState<boolean>(false);
+  const [liked, setLiked] = useState<boolean>(false);
+
+  const [localPostState, setLocalPostState] = useState<PostData>(post);
 
   const { user } = useAuth();
 
@@ -35,10 +38,6 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
     setPostTagArray(tempTags);
   };
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
   const handleSubmitComment = async () => {
     if (!comment.trim() || !user) return;
 
@@ -46,7 +45,6 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
       id: v4(),
       content: comment.trim(),
       created_at: new Date().toISOString(),
-
       user_id: user.id,
       username: user.username,
       icon_index: user.icon_index,
@@ -54,6 +52,10 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
     };
 
     try {
+      setLocalPostState((prev) => ({
+        ...prev,
+        comments: [...prev.comments, newComment],
+      }));
       const result = await addComment(post.id, newComment);
       console.log(result);
       setComment("");
@@ -62,8 +64,50 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
     }
   };
 
+  const handleUpdateLikes = async () => {
+    const newLikeCount = post.likes_count + 1;
+    const newLikes = {
+      field: "likes_count",
+      value: newLikeCount,
+      postId: post.id,
+    };
+    try {
+      setLocalPostState((prev) => ({
+        ...prev,
+        likes_count: newLikeCount,
+      }));
+      const result = await updatePost(newLikes);
+      setLiked(true);
+      console.log(result);
+    } catch (error) {
+      console.error("Error adding likes:", error);
+    }
+  };
+
+  const handleUpdateViews = async () => {
+    const newViewCount = post.views_count + 1;
+    const newViews = {
+      field: "views_count",
+      value: newViewCount,
+      postId: post.id,
+    };
+
+    try {
+      setLocalPostState((prev) => ({
+        ...prev,
+        views_count: newViewCount,
+      }));
+      const result = await updatePost(newViews);
+      console.log(result);
+    } catch (error) {
+      console.log("Error adding views:", error);
+    }
+  };
+
   useEffect(() => {
     fetchTags();
+    handleUpdateViews();
+    setLocalPostState(post);
   }, [post]);
 
   return (
@@ -92,7 +136,7 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
       >
         <div
           className="modal-content d-flex flex-column"
-          style={{ borderRadius: "16px 16px 16px 16px", height: "100%" }}
+          style={{ borderRadius: "16px", height: "100%" }}
         >
           <div className="modal-header border-0">
             <button
@@ -107,56 +151,58 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
           >
             <div className="d-flex gap-2">
               <Animal
-                name={profileIcons[post.icon_index]}
-                color={profileColors[post.color_index]}
+                name={profileIcons[localPostState.icon_index]}
+                color={profileColors[localPostState.color_index]}
                 size="55px"
                 rounded
               />
               <div className="flex-grow-1">
                 <div className="d-flex align-items-center gap-2">
-                  <div className="text-muted">{post.username}</div>
+                  <div className="text-muted">{localPostState.username}</div>
                   <div className="text-muted">
-                    {formatDate(post.created_at)}
+                    {formatDate(localPostState.created_at)}
                   </div>
                   <div className="d-flex gap-1">
-                    {postTagArray.length > 0 &&
-                      postTagArray.map((tag) => (
-                        <div key={tag.id}>
-                          <SearchTag
-                            id={tag.id}
-                            text={tag.text}
-                            size="small"
-                            color={tag.color}
-                          />
-                        </div>
-                      ))}
+                    {postTagArray.map((tag) => (
+                      <div key={tag.id}>
+                        <SearchTag
+                          id={tag.id}
+                          text={tag.text}
+                          size="small"
+                          color={tag.color}
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
-                <div className="fs-3 fw-bold text-start">{post.title}</div>
-                <div className="text-start mb-3">{post.content}</div>
+                <div className="fs-3 fw-bold text-start">
+                  {localPostState.title}
+                </div>
+                <div className="text-start mb-3">{localPostState.content}</div>
               </div>
             </div>
             <div className="d-flex justify-content-between">
               <div className="text-muted mb-1">
-                {post.comments.length} Comments
+                {localPostState.comments.length} Comments
               </div>
               <div className="d-flex text-muted align-items-center">
-                <FaThumbsUp className="mx-2" size={15} />
-                {post.likes_count}
+                <FaEye color="gray" size={15} className="mx-2" />
+                {localPostState.views_count}
+                <FaThumbsUp
+                  className="mx-2"
+                  size={15}
+                  onClick={handleUpdateLikes}
+                  color={liked ? "blue" : "gray"}
+                />
+                {localPostState.likes_count}
               </div>
             </div>
             <div
               className="w-100 mb-3"
               style={{ height: "1px", backgroundColor: "#dee2e6" }}
             ></div>
-            <div
-              style={{
-                overflowY: "auto",
-                display: "-webkit-box",
-              }}
-            ></div>
-            {post?.comments.map((comment) => (
-              <div className="gap-2">
+            {localPostState?.comments.map((comment) => (
+              <div className="gap-2" key={comment.id}>
                 <DiscussionComment comment={comment} />
               </div>
             ))}
@@ -196,37 +242,13 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
               />
               <button
                 className="btn position-absolute top-50 end-0 translate-middle-y pe-3"
-                style={{
-                  border: "none",
-                  background: "none",
-                  zIndex: 1000,
-                  pointerEvents: "auto",
-                }}
-                onClick={() => {
-                  if (comment.trim()) {
-                    setComment("");
-                  }
-                }}
+                style={{ border: "none", background: "none" }}
+                onClick={handleSubmitComment}
               >
                 <IoSend
                   size={20}
                   className="text-secondary"
-                  style={{
-                    transition: "color 0.2s ease",
-                  }}
-                  onMouseEnter={(e) =>
-                    e.currentTarget.classList.replace(
-                      "text-secondary",
-                      "text-primary"
-                    )
-                  }
-                  onMouseLeave={(e) =>
-                    e.currentTarget.classList.replace(
-                      "text-primary",
-                      "text-secondary"
-                    )
-                  }
-                  onClick={handleSubmitComment}
+                  style={{ transition: "color 0.2s ease" }}
                 />
               </button>
             </div>

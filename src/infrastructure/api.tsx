@@ -31,8 +31,8 @@ type LoginResponse = {
 };
 
 type UpdatePostField = {
-  field: "likes_count" | "views_count" | "comments";
-  value: string | CommentData[];
+  field: string;
+  value: number;
   postId: string;
 };
 
@@ -131,15 +131,16 @@ export const updatePost = async ({
   postId,
 }: UpdatePostField): Promise<PostData | ApiError> => {
   try {
+    const payload = { field, value };
+
+    console.log("Sending update request:", payload);
+
     const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        [field]: value,
-        updated_at: new Date().toISOString(),
-      }),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
@@ -150,6 +151,7 @@ export const updatePost = async ({
     }
 
     const data = await response.json();
+    console.log("Update response:", data);
     return data;
   } catch (error) {
     console.error("Error updating post:", error);
@@ -194,6 +196,45 @@ export const addComment = async (
       status: 500,
     };
   }
+};
+
+export const setupPostEventListener = (
+  setPostArray: React.Dispatch<React.SetStateAction<PostData[]>>,
+  selectedPost: PostData,
+  setSelectedPost: React.Dispatch<React.SetStateAction<PostData>>
+) => {
+  const eventSource = new EventSource(`${API_BASE_URL}/events/posts`);
+
+  eventSource.onmessage = (event) => {
+    const data = JSON.parse(event.data) as PostData[];
+    setPostArray(data);
+  };
+
+  eventSource.addEventListener("post_update", (event) => {
+    const post = JSON.parse(event.data) as PostData;
+    setPostArray((posts) => posts.map((p) => (p.id === post.id ? post : p)));
+    if (selectedPost.id === post.id) setSelectedPost(post);
+  });
+
+  eventSource.addEventListener("comment_added", (event) => {
+    const { postId, comment } = JSON.parse(event.data) as {
+      postId: string;
+      comment: CommentData;
+    };
+    setPostArray((posts) =>
+      posts.map((p) =>
+        p.id === postId ? { ...p, comments: [...p.comments, comment] } : p
+      )
+    );
+    if (selectedPost.id === postId) {
+      setSelectedPost((prev) => ({
+        ...prev,
+        comments: [...prev.comments, comment],
+      }));
+    }
+  });
+
+  return eventSource;
 };
 
 // Tag API functions

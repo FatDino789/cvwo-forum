@@ -2,7 +2,7 @@ import { FC, useEffect, useState, useContext } from "react";
 import Post from "../components/forum/post";
 import Discussion from "../components/forum/discussion";
 import "../App.css";
-import { getPosts } from "../infrastructure/api";
+import { getPosts, setupPostEventListener } from "../infrastructure/api";
 import { PostData } from "../database/database-types";
 import { TagProps } from "../components/filter/search-tag";
 import { TagContext } from "../infrastructure/tag-context";
@@ -35,6 +35,20 @@ const ForumSection: FC = () => {
   const closeModal = (): void => {
     setModalOpen(false);
   };
+
+  useEffect(() => {
+    const eventSource = setupPostEventListener(
+      setPostArray,
+      selectedPost,
+      setSelectedPost
+    );
+    const loadPosts = async () => {
+      const result = await getPosts();
+      if (!("message" in result)) setPostArray(result);
+    };
+    loadPosts();
+    return () => eventSource.close();
+  }, []);
 
   useEffect(() => {
     const loadPosts = async (): Promise<void> => {
