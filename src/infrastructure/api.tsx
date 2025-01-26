@@ -139,8 +139,6 @@ export const updatePost = async ({
   try {
     const payload = { field, value };
 
-    console.log("Sending update request:", payload);
-
     const response = await fetch(`${API_BASE_URL}/posts/${postId}`, {
       method: "PATCH",
       headers: {
@@ -157,45 +155,9 @@ export const updatePost = async ({
     }
 
     const data = await response.json();
-    console.log("Update response:", data);
     return data;
   } catch (error) {
     console.error("Error updating post:", error);
-    return {
-      message:
-        error instanceof Error ? error.message : "An unknown error occurred",
-      status: 500,
-    };
-  }
-};
-
-// Comment API functions
-export const addComment = async (
-  postId: string,
-  comment: CommentData
-): Promise<PostData | ApiError> => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        field: "comments",
-        value: comment,
-        postId,
-      }),
-    });
-
-    if (!response.ok) {
-      return {
-        message: `Error: ${response.status} ${response.statusText}`,
-        status: response.status,
-      };
-    }
-
-    return await response.json();
-  } catch (error) {
     return {
       message:
         error instanceof Error ? error.message : "An unknown error occurred",
@@ -241,6 +203,41 @@ export const setupPostEventListener = (
   });
 
   return eventSource;
+};
+
+// Comment API functions
+export const addComment = async (
+  postId: string,
+  comment: CommentData
+): Promise<PostData | ApiError> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/posts/${postId}/comments`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        field: "comments",
+        value: comment,
+        postId,
+      }),
+    });
+
+    if (!response.ok) {
+      return {
+        message: `Error: ${response.status} ${response.statusText}`,
+        status: response.status,
+      };
+    }
+
+    return await response.json();
+  } catch (error) {
+    return {
+      message:
+        error instanceof Error ? error.message : "An unknown error occurred",
+      status: 500,
+    };
+  }
 };
 
 // Tag API functions
@@ -464,6 +461,7 @@ export const registerUser = async (credentials: RegisterCredentials) => {
   }
 };
 
+// API functions for user likes
 export const updateUserLikes = async ({
   userId,
   postId,

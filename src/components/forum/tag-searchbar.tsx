@@ -2,7 +2,7 @@ import { FC, useContext, useState } from "react";
 import { TagProps, SearchTag } from "../filter/search-tag";
 import { TagContext } from "../../infrastructure/tag-context";
 import { FaPlus } from "react-icons/fa";
-import tagColors from "../../utility/tag-colors";
+import tagColors from "../../assets/tag-colors";
 
 import { v4 } from "uuid";
 

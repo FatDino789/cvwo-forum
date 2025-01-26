@@ -47,7 +47,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
-  // Persist user data in localStorage
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
@@ -56,7 +55,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     }
   }, [user]);
 
-  // Persist JWT token in localStorage
   useEffect(() => {
     if (jwtToken) {
       localStorage.setItem("jwtToken", jwtToken);

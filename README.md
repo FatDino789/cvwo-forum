@@ -1,50 +1,48 @@
-# React + TypeScript + Vite
+# Forum Frontend Setup Guide
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Prerequisites
 
-Currently, two official plugins are available:
+- Node.js (v18.0.0 or higher)
+- npm or yarn
+- Backend server running (see backend README.md file)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Installation
 
-## Expanding the ESLint configuration
+```bash
+# Clone repository
+git clone https://github.com/FatDino789/cvwo-forum.git
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+# Install dependencies
+npm install
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Running the Application
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+```bash
+# Start development server
+npm run dev
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+# Application will run at http://localhost:5173
+```
+
+## Technology Stack
+
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router DOM
+- shadcn/ui components
+
+## Project Structure
+
+```
+src/
+    ├── assets/          # Static assets, profile icons, colors
+    ├── components/      # Reusable React components
+    ├── database/        # TypeScript database types
+    ├── infrastructure/  # API functions, contexts
+    ├── sections/        # Page layout components
+    ├── App.css          # Global styles
+    └── App.tsx          # Root component
 ```
