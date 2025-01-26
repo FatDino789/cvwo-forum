@@ -36,12 +36,14 @@ const DiscussionComment: FC<DiscussionCommentProps> = ({
         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "white")}
       >
         <div className="d-flex gap-2">
-          <Animal
-            name={profileIcons[comment?.icon_index]}
-            color={profileColors[comment?.color_index]}
-            rounded
-            size="45px"
-          />
+          <div>
+            <Animal
+              name={profileIcons[comment?.icon_index]}
+              color={profileColors[comment?.color_index]}
+              rounded
+              size="45px"
+            />
+          </div>
           <div className="d-flex flex-column">
             <div className="d-flex align-items-center gap-2">
               <div className="text-muted fs-10">{comment.username}</div>

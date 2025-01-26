@@ -66,7 +66,7 @@ const AuthenticationForm: FC<AuthModalProps> = ({ isOpen, onClose, title }) => {
     try {
       const newId = v4();
       const randomIcon = Math.floor(Math.random() * 68);
-      const randomColor = Math.floor(Math.random() * 148);
+      const randomColor = Math.floor(Math.random() * 16);
       const result =
         title === "Register"
           ? await registerUser({
@@ -74,8 +74,8 @@ const AuthenticationForm: FC<AuthModalProps> = ({ isOpen, onClose, title }) => {
               email,
               password,
               username,
-              iconIndex: randomIcon,
-              colorIndex: randomColor,
+              icon_index: randomIcon,
+              color_index: randomColor,
             })
           : await loginUser({ email, password });
 

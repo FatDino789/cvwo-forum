@@ -138,7 +138,7 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
     };
 
     getLikes();
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (userLikes?.includes(post.id)) {
@@ -193,13 +193,15 @@ const Discussion: FC<DiscussionProps> = ({ isOpen, onClose, post }) => {
             style={{ overflow: "auto" }}
           >
             <div className="d-flex gap-2">
-              <Animal
-                name={profileIcons[localPostState.icon_index]}
-                color={profileColors[localPostState.color_index]}
-                size="55px"
-                rounded
-              />
-              <div className="flex-grow-1">
+              <div>
+                <Animal
+                  name={profileIcons[localPostState.icon_index]}
+                  color={profileColors[localPostState.color_index]}
+                  size="55px"
+                  rounded
+                />
+              </div>
+              <div className="flex-grow-1 flex-wrap ">
                 <div className="d-flex align-items-center gap-2">
                   <div className="text-muted">{localPostState.username}</div>
                   <div className="text-muted">

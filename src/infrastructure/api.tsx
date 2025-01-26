@@ -15,8 +15,8 @@ type RegisterCredentials = {
   email: string;
   password: string;
   username: string;
-  iconIndex: number;
-  colorIndex: number;
+  icon_index: number;
+  color_index: number;
 };
 
 type LoginResponse = {
